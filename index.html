@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheesely.id - Premium Basque Catalog</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght=700&family=Poppins:wght=300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: #fff;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .cart-status {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .cart-status:hover {
+            transform: scale(1.05);
+            background-color: #333;
+        }
+
+        /* --- KATALOG UTAMA --- */
+        .container {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        .catalog-title {
+            font-weight: 300;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .admin-badge-info {
+            font-size: 0.8rem;
+            color: #ff9500;
+            margin-bottom: 25px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transform: translateY(-5px);
+        }
+
+        .product-img-box {
+            width: 100%;
+            height: 200px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-img-placeholder {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .btn-add {
+            width: 100%;
+            background-color: transparent;
+            color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            padding: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add:hover {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .btn-edit-admin {
+            width: 100%;
+            background-color: #ff9500;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 25px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #fafafa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .btn-admin-login {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 0.75rem;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-admin-login:hover {
+            color: #1a1a1a;
+        }
+
+        /* --- CONTROL PANEL ADMIN --- */
+        .admin-global-panel {
+            background: #fffdf5;
+            border: 1px dashed #ff9500;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .admin-global-panel h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #c47300;
+        }
+
+        .admin-inline-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            max-width: 500px;
+        }
+
+        /* --- OVERLAY PANEL KERANJANG SLIDE-OUT --- */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cart-modal {
+            width: 100%;
+            max-width: 480px;
+            background-color: #fff;
+            height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-overlay.active .cart-modal {
+            transform: translateX(0);
+        }
+
+        .cart-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .cart-modal-title {
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #000;
+            padding: 5px;
+        }
+
+        .cart-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #eee;
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .btn-qty {
+            background: #f7f7f7;
+            border: none;
+            width: 28px;
+            height: 28px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-qty:hover {
+            background: #e0e0e0;
+        }
+
+        .quantity-display {
+            width: 35px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .cart-item-subtotal {
+            font-weight: 600;
+            min-width: 85px;
+            text-align: right;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        /* --- FORM PENGIRIMAN & INFO PEMBAYARAN --- */
+        .user-form-section {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .form-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background-color: #fafafa;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background-color: #fff;
+        }
+
+        /* --- QRIS DENGAN GENERATOR LIVE --- */
+        .qris-section {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .qris-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #b30000;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .qris-image-wrapper {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .qris-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qris-instruction {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .nominal-notice {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .nominal-bold {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+            border-bottom: 2px dashed #000;
+            padding: 2px 5px;
+        }
+
+        .cart-summary {
+            border-top: 1px solid #1a1a1a;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .btn-wa {
+            width: 100%;
+            background-color: #25D366;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-wa:hover {
+            background-color: #1ebd58;
+            transform: scale(1.02);
+        }
+
+        .empty-cart-msg {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* --- UI MODAL SYSTEM INTERNAL --- */
+        .admin-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .admin-box {
+            background: #fff;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .admin-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .admin-box-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .btn-admin-submit {
+            width: 100%;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .btn-admin-submit:hover {
+            background: #333;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 15px 20px; }
+            header h1 { font-size: 1.4rem; }
+            .cart-status { padding: 8px 16px; font-size: 0.75rem; }
+            .container { padding: 20px; }
+            .catalog-title { font-size: 1rem; margin-bottom: 5px; }
+            .products-grid { grid-template-columns: 1fr; gap: 20px; }
+            .admin-inline-group { flex-direction: column; align-items: flex-start; }
+            .admin-inline-group button { width: 100%; margin-top: 5px; }
+            .cart-overlay { justify-content: flex-end; align-items: flex-end; }
+            .cart-modal {
+                max-width: 100%;
+                height: 85vh;
+                border-top-left-radius: 25px;
+                border-top-right-radius: 25px;
+                padding: 20px;
+                transform: translateY(100%);
+            }
+            .cart-overlay.active .cart-modal { transform: translateY(0); }
+            .cart-item-name { font-size: 0.85rem; }
+            .cart-item-subtotal { min-width: 75px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Cheesely.id</h1>
+        <div class="cart-status" id="cart-counter" onclick="toggleCart(true)">
+            Keranjang (0)
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <h2 class="catalog-title" id="page-title">Freshly Baked Basque</h2>
+            <div class="admin-badge-info" id="admin-badge">⚡ ANDA SEDANG DALAM MODE PENGELOLAAN KATALOG TOKO</div>
+            
+            <div class="admin-global-panel" id="globalAdminPanel">
+                <h4>⚙️ Pengaturan Global WhatsApp Admin</h4>
+                <div class="admin-inline-group">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Nomor WA Penerima Order (Angka Saja, Awali 62)</label>
+                        <input type="text" id="globalWaInput" placeholder="Contoh: 6283121518824">
+                    </div>
+                    <button class="btn-admin-submit" style="width:auto; white-space:nowrap; padding:11px 20px; margin-top:0;" onclick="saveGlobalWa()">Simpan No WA</button>
+                </div>
+            </div>
+
+            <div class="products-grid" id="products-container"></div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-text">© 2026 Cheesely.id. All Rights Reserved.</div>
+        <button class="btn-admin-login" id="adminBtn" onclick="openGateModal()">Kelola Toko (Admin)</button>
+    </footer>
+
+    <div class="admin-modal-overlay" id="gateModal">
+        <div class="admin-box">
+            <button class="admin-box-close" onclick="closeGateModal()">&times;</button>
+            <h3>🔑 Gerbang Masuk Admin</h3>
+            <div class="form-group">
+                <label>Kata Sandi Khusus</label>
+                <input type="password" id="adminPasswordInput" placeholder="Masukkan password toko">
+            </div>
+            <button class="btn-admin-submit" onclick="submitGatePassword()">Verifikasi Akses</button>
+        </div>
+    </div>
+
+    <div class="admin-modal-overlay" id="editModal">
+        <div class="admin-box">
+            <button class="admin-box-close" onclick="closeEditModal()">&times;</button>
+            <h3>🛠️ Edit Detail Produk</h3>
+            <input type="hidden" id="editProductId">
+            <div class="form-group">
+                <label>Nama Kue / Produk</label>
+                <input type="text" id="editProductName">
+            </div>
+            <div class="form-group">
+                <label>Harga Jual (Angka Saja)</label>
+                <input type="number" id="editProductPrice">
+            </div>
+            <div class="form-group">
+                <label>Link Gambar / URL Image</label>
+                <input type="text" id="editProductImg" placeholder="Tempel link gambar di sini">
+            </div>
+            <button class="btn-admin-submit" onclick="submitProductEdit()">Simpan Perubahan</button>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart(false)">
+        <div class="cart-modal" onclick="event.stopPropagation()">
+            <div class="cart-modal-header">
+                <h2 class="cart-modal-title">Daftar Pesanan</h2>
+                <button class="close-cart" onclick="toggleCart(false)">&times;</button>
+            </div>
+
+            <div class="cart-scroll-area">
+                <div id="cart-items-container">
+                    <p class="empty-cart-msg">Keranjang belanja Anda kosong.</p>
+                </div>
+                
+                <div class="user-form-section" id="form-area" style="display: none;">
+                    <div class="form-title">📍 Informasi Pengiriman</div>
+                    <div class="form-group">
+                        <label for="user-name">Nama Lengkap</label>
+                        <input type="text" id="user-name" placeholder="Masukkan nama lengkap Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-phone">Nomor Telepon / WhatsApp</label>
+                        <input type="tel" id="user-phone" placeholder="Contoh: 081234567890">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-address">Alamat Lengkap</label>
+                        <textarea id="user-address" rows="3" placeholder="Masukkan alamat pengiriman secara lengkap dan jelas"></textarea>
+                    </div>
+                </div>
+                
+                <div class="qris-section" id="qris-area" style="display: none;">
+                    <div class="qris-title">💳 SCAN QRIS CHEESELY.ID</div>
+                    <div class="qris-image-wrapper">
+                        <img id="qris-barcode-img" src="" alt="QRIS Barcode Resmi">
+                    </div>
+                    <div class="qris-instruction">
+                        Silakan scan barcode resmi **Cheesely_id** di atas menggunakan e-wallet (Gopay, OVO, Dana) atau aplikasi Bank Anda.
+                    </div>
+                    <div class="nominal-notice">
+                        Total yang harus dibayar: <span class="nominal-bold" id="qris-nominal">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="total-row">
+                    <span>Total Pembayaran:</span>
+                    <span id="grand-total">Rp 0</span>
+                </div>
+                <button class="btn-wa" onclick="sendToWhatsApp()">
+                    Konfirmasi via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_WHATSAPP = "6283121518824"; 
+        const ADMIN_PASSWORD = "cheesely123"; 
+        let isAdminMode = false;
+
+        // Taktik Jitu: Mengunci string statis QRIS resmi milik Cheesely_id Padang
+        const MY_QRIS_STRING = "00020101021126610014COM.GO-JEK.WWW01189360091431059853890210G1059853890303UMI51440014ID.CO.QRIS.WWW0215ID10265149406040303UMI5204581253033605802ID5911Cheesely_id6006PADANG61052516362070703A016304829E";
+
+        const defaultProducts = [
+            { id: 1, name: "Velvet Berry Basque", price: 45000, img: "" },
+            { id: 2, name: "Lotus Biscoff Crunch", price: 48000, img: "" },
+            { id: 3, name: "Intense Cocoa-Straw", price: 50000, img: "" },
+            { id: 4, name: "Original Charred Gold", price: 40000, img: "" },
+            { id: 5, name: "Speculoos Bliss Mini", price: 47000, img: "" },
+            { id: 6, name: "Dark Crown Special", price: 52000, img: "" }
+        ];
+
+        let products = [];
+        let currentAdminWa = DEFAULT_WHATSAPP;
+        let cart = []; 
+
+        function loadSavedData() {
+            try {
+                const savedProducts = localStorage.getItem('cheesely_products');
+                if (savedProducts) {
+                    products = JSON.parse(savedProducts);
+                } else {
+                    products = [...defaultProducts];
+                }
+
+                const savedWa = localStorage.getItem('cheesely_admin_wa');
+                if (savedWa) {
+                    currentAdminWa = savedWa;
+                } else {
+                    currentAdminWa = DEFAULT_WHATSAPP;
+                }
+            } catch (error) {
+                products = [...defaultProducts];
+                currentAdminWa = DEFAULT_WHATSAPP;
+            }
+            document.getElementById('globalWaInput').value = currentAdminWa;
+        }
+
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('cheesely_products', JSON.stringify(products));
+                localStorage.setItem('cheesely_admin_wa', currentAdminWa);
+            } catch (error) {
+                console.log("Gagal menyimpan data.");
+            }
+        }
+
+        function openGateModal() {
+            if (!isAdminMode) {
+                document.getElementById('adminPasswordInput').value = "";
+                document.getElementById('gateModal').style.display = 'flex';
+            } else {
+                isAdminMode = false;
+                document.getElementById("adminBtn").innerText = "Keluar Toko (Admin)";
+                document.getElementById("page-title").innerText = "Freshly Baked Basque";
+                document.getElementById("admin-badge").style.display = 'none';
+                document.getElementById("globalAdminPanel").style.display = 'none';
+                alert("Anda telah keluar dari mode pengelolaan toko.");
+                renderCatalog();
+            }
+        }
+
+        function closeGateModal() {
+            document.getElementById('gateModal').style.display = 'none';
+        }
+
+        function submitGatePassword() {
+            const typedPassword = document.getElementById('adminPasswordInput').value;
+            if (typedPassword === ADMIN_PASSWORD) {
+                isAdminMode = true;
+                closeGateModal();
+                alert("Akses diterima! Anda masuk sebagai Admin Cheesely.id.");
+                document.getElementById("adminBtn").innerText = "Keluar dari Mode Admin";
+                document.getElementById("page-title").innerText = "⚙️ Mode Manajemen Katalog Toko";
+                document.getElementById("admin-badge").style.display = 'block';
+                document.getElementById("globalAdminPanel").style.display = 'block';
+                document.getElementById('globalWaInput').value = currentAdminWa;
+                renderCatalog();
+            } else {
+                alert("Kata sandi salah, bro!");
+            }
+        }
+
+        function saveGlobalWa() {
+            const inputWa = document.getElementById('globalWaInput').value.trim();
+            let cleanWa = inputWa.replace(/[^0-9]/g, ''); 
+            
+            if (cleanWa.startsWith('0')) {
+                cleanWa = '62' + cleanWa.substring(1);
+            }
+
+            if (cleanWa.length < 10) {
+                alert("Format nomor WhatsApp tidak valid!");
+                return;
+            }
+
+            currentAdminWa = cleanWa;
+            saveDataToStorage();
+            alert(`Nomor WhatsApp admin berhasil diubah menjadi: ${currentAdminWa}`);
+        }
+
+        function openEditModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductImg').value = product.img;
+
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function submitProductEdit() {
+            const id = parseInt(document.getElementById('editProductId').value);
+            const name = document.getElementById('editProductName').value.trim();
+            const price = parseInt(document.getElementById('editProductPrice').value);
+            const img = document.getElementById('editProductImg').value.trim();
+
+            if (!name || isNaN(price)) {
+                alert("Nama dan harga barang tidak boleh kosong!");
+                return;
+            }
+
+            const product = products.find(p => p.id === id);
+            if (product) {
+                product.name = name;
+                product.price = price;
+                product.img = img;
+
+                saveDataToStorage();
+                closeEditModal();
+                alert("Katalog sukses diperbarui!");
+                renderCatalog();
+                renderCart();
+            }
+        }
+
+        function toggleCart(isOpen) {
+            const overlay = document.getElementById('cartOverlay');
+            if (isOpen) {
+                overlay.classList.add('active');
+            } else {
+                overlay.classList.remove('active');
+            }
+        }
+
+        function renderCatalog() {
+            const container = document.getElementById('products-container');
+            if (!container) return;
+            
+            container.innerHTML = products.map(product => {
+                const imageContent = product.img !== "" 
+                    ? `<img src="${product.img}" alt="${product.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">`
+                    : '';
+                const placeholderDisplay = product.img !== "" ? 'style="display:none;"' : '';
+
+                return `
+                    <div class="product-card">
+                        <div>
+                            <div class="product-img-box">
+                                ${imageContent}
+                                <div class="product-img-placeholder" ${placeholderDisplay}>CHEESELY ARTISTRY</div>
+                            </div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div>
+                            <button class="btn-add" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                            <button class="btn-edit-admin" style="display: ${isAdminMode ? 'block' : 'none'};" onclick="openEditModal(${product.id})">🛠️ Edit Produk</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+
+            if (cartItem) {
+                cartItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            renderCart();
+        }
+
+        function updateQuantity(productId, change) {
+            const cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.quantity += change;
+                if (cartItem.quantity <= 0) {
+                    removeFromCart(productId);
+                    return;
+                }
+            }
+            renderCart();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const cartCounter = document.getElementById('cart-counter');
+            const grandTotalEl = document.getElementById('grand-total');
+            const qrisArea = document.getElementById('qris-area');
+            const formArea = document.getElementById('form-area');
+            const qrisBarcodeImg = document.getElementById('qris-barcode-img');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCounter.innerText = `Keranjang (${totalItems})`;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="empty-cart-msg">Keranjang belanja Anda kosong.</p>';
+                grandTotalEl.innerText = 'Rp 0';
+                qrisArea.style.display = 'none';
+                formArea.style.display = 'none';
+                return;
+            }
+
+            qrisArea.style.display = 'flex';
+            formArea.style.display = 'block';
+            let grandTotal = 0;
+
+            container.innerHTML = cart.map(item => {
+                const currentMaster = products.find(p => p.id === item.id);
+                const itemPrice = currentMaster ? currentMaster.price : item.price;
+                const itemName = currentMaster ? currentMaster.name : item.name;
+                
+                const itemSubtotal = itemPrice * item.quantity;
+                grandTotal += itemSubtotal;
+
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${itemName}</div>
+                            <div class="cart-item-price">@ Rp ${itemPrice.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="btn-qty" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <div class="quantity-display">${item.quantity}</div>
+                            <button class="btn-qty" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <div class="cart-item-subtotal">
+                            Rp ${itemSubtotal.toLocaleString('id-ID')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grandTotalEl.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+            document.getElementById('qris-nominal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+            // DISINI KEAJAIBANNYA: String asli QRIS lo dikonversi jadi gambar barcode real-time!
+            qrisBarcodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(MY_QRIS_STRING)}`;
+        }
+
+        function sendToWhatsApp() {
+            if (cart.length === 0) {
+                alert("Keranjang belanja Anda masih kosong.");
+                return;
+            }
+
+            const inputName = document.getElementById('user-name').value.trim();
+            const inputPhone = document.getElementById('user-phone').value.trim();
+            const inputAddress = document.getElementById('user-address').value.trim();
+
+            if (!inputName || !inputPhone || !inputAddress) {
+                alert("Mohon lengkapi data nama, nomor telepon, dan alamat pengiriman Anda terlebih dahulu.");
+                return;
+            }
+
+            let textMessage = `*Halo Cheesely.id, saya ingin mengonfirmasi pesanan:*%0A%0A`;
+            
+            textMessage += `👤 *Informasi Pengiriman:*%0A`;
+            textMessage += `• Nama Lengkap: ${inputName}%0A`;
+            textMessage += `• No. Telepon: ${inputPhone}%0A`;
+            textMessage += `• Alamat Kirim: ${inputAddress}%0A%0A`;
+
+            textMessage += `📦 *Rincian Pesanan:*%0A`;
+            let grandTotal = 0;
+            
+            cart.forEach((item, index) => {
+                const currentMaster = products.find(p => p.id === item.id);
+                const itemPrice = currentMaster ? currentMaster.price : item.price;
+                const itemName = currentMaster ? currentMaster.name : item.name;
+
+                const subtotal = itemPrice * item.quantity;
+                grandTotal += subtotal;
+                textMessage += `${index + 1}. *${itemName}* (x${item.quantity})%0A`;
+                textMessage += `   Subtotal: Rp ${subtotal.toLocaleString('id-ID')}%0A`;
+            });
+
+            textMessage += `%0A*Total Pembayaran: Rp ${grandTotal.toLocaleString('id-ID')}*%0A%0A`;
+            textMessage += `_Saya sudah melihat barcode QRIS Cheesely_id di web dan akan/sudah melakukan pembayaran._`;
+
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${currentAdminWa}&text=${textMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        window.onload = function() {
+            loadSavedData();
+            renderCatalog();
+            renderCart(); 
+        };
+    </script>
+</body>
+</html>
