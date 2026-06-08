@@ -1,458 +1,1086 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Administrasi Toserba Enak - Ritel Edition</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        .login-container { max-width: 400px; margin: 80px auto; }
-        .btn-tab.active { background-color: #0dcaf0 !important; color: #000 !important; font-weight: bold; }
-        .sticky-top { top: 0; z-index: 1020; }
-        .chart-container { max-width: 100%; height: 280px; margin-top: 15px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Cheseely.id • Kue Premium</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #faf7f4;
+      color: #3e3640;
+      line-height: 1.5;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .cart-overlay,
+    .form-overlay,
+    .admin-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .cart-overlay.active,
+    .form-overlay.active,
+    .admin-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .floating-cart {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid #e2d4ca;
+      padding: 10px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #4a3b42;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: all 0.25s ease;
+    }
+
+    .floating-cart:active {
+      transform: scale(0.95);
+      background: #f7efe8;
+    }
+
+    .cart-badge {
+      background: #b4846c;
+      color: white;
+      font-size: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .hero {
+      padding: 56px 20px 28px;
+      text-align: center;
+      background: #ffffff;
+      border-bottom: 1px solid #f0e7e1;
+    }
+
+    .hero h1 {
+      font-size: clamp(24px, 8vw, 38px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: #3f3340;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      color: #7b6e73;
+      font-size: clamp(14px, 4vw, 17px);
+      max-width: 420px;
+      margin: 0 auto 24px;
+      padding: 0 10px;
+    }
+
+    .search-box {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 8px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: 1.5px solid #e7dbd2;
+      background: #fdfbf9;
+      font-size: 15px;
+      color: #3e3640;
+      outline: none;
+      transition: 0.25s ease;
+    }
+
+    .search-box input:focus {
+      border-color: #c7b2a5;
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(180, 150, 130, 0.08);
+    }
+
+    .products {
+      max-width: 1200px;
+      margin: 16px auto;
+      padding: 8px 12px 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+    }
+
+    @media (min-width: 600px) {
+      .products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 12px 20px 40px;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+      border: 1px solid #f3eae4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 12px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card h3 {
+      font-size: clamp(14px, 3.5vw, 17px);
+      font-weight: 600;
+      color: #3e3540;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .price {
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 700;
+      color: #b4846c;
+      margin: 4px 0 10px;
+    }
+
+    .btn-add {
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      background: #f9f3ed;
+      color: #4d3e44;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid #e7d9ce;
+      transition: all 0.2s ease;
+      margin-top: auto;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-add:active {
+      background: #e7d6ca;
+      transform: scale(0.97);
+    }
+
+    .cart {
+      position: fixed;
+      right: -100%;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      height: 100dvh;
+      background: #ffffff;
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.1);
+      transition: right 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+      padding: 20px 18px;
+      overflow-y: auto;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      visibility: hidden;
+    }
+
+    .cart.active {
+      right: 0;
+      visibility: visible;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 20px;
+      color: #3a2f35;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f5ede7;
+    }
+
+    .close {
+      cursor: pointer;
+      font-size: 26px;
+      color: #8f7e7a;
+      padding: 6px 10px;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .close:active {
+      background: #f5ede7;
+    }
+
+    #cart-items {
+      flex: 1;
+      min-height: 120px;
+    }
+
+    .cart-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f5ede7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item-price {
+      font-size: 13px;
+      color: #8f7e7a;
+    }
+
+    .btn-remove {
+      background: #fff0f0;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #c0392b;
+      flex-shrink: 0;
+    }
+
+    .cart-footer {
+      border-top: 2px solid #f5ede7;
+      padding-top: 14px;
+      margin-top: auto;
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: 700;
+      color: #4a3b42;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .btn-order {
+      width: 100%;
+      padding: 14px;
+      background: #b4846c;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-order:active {
+      background: #9f7260;
+      transform: scale(0.97);
+    }
+
+    .form-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: white;
+      padding: 24px 20px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      width: 92%;
+      max-width: 380px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .form-modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .form-modal h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #3a2f35;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #5e4b51;
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #e7dbd2;
+      font-size: 14px;
+      background: #fdfbf9;
+      outline: none;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #c7b2a5;
+      background: #fff;
+    }
+
+    .btn-submit-order {
+      width: 100%;
+      padding: 14px;
+      background: #25D366;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 30px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      margin-top: 6px;
+    }
+
+    .btn-submit-order:active {
+      background: #1ebe5c;
+      transform: scale(0.97);
+    }
+
+    .close-form {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      cursor: pointer;
+      font-size: 22px;
+      color: #8f7e7a;
+      padding: 4px 8px;
+    }
+
+    .admin-login-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: white;
+      padding: 24px 20px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      width: 88%;
+      max-width: 360px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .admin-login-modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .admin-login-modal h3 {
+      text-align: center;
+      margin-bottom: 16px;
+      color: #3a2f35;
+    }
+
+    .admin-login-modal input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      border: 1px solid #e7dbd2;
+      font-size: 14px;
+    }
+
+    .admin-login-modal button {
+      width: 100%;
+      padding: 12px;
+      background: #4d3e44;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 8px;
+      right: 14px;
+      cursor: pointer;
+      font-size: 20px;
+      color: #8f7e7a;
+    }
+
+    .admin-panel {
+      position: fixed;
+      right: -100%;
+      top: 0;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      height: 100dvh;
+      background: #ffffff;
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
+      transition: right 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+      padding: 20px 16px;
+      overflow-y: auto;
+      z-index: 1000;
+      visibility: hidden;
+    }
+
+    .admin-panel.active {
+      right: 0;
+      visibility: visible;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #f0e4db;
+      padding-bottom: 10px;
+    }
+
+    .admin-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      background: #f9f3ed;
+      border: none;
+      font-weight: 600;
+      font-size: 13px;
+      color: #4d3e44;
+    }
+
+    .admin-tab.active {
+      background: #4d3e44;
+      color: white;
+    }
+
+    .admin-content {
+      display: none;
+    }
+
+    .admin-content.active {
+      display: block;
+    }
+
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .admin-form input {
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid #e7dbd2;
+      font-size: 14px;
+    }
+
+    .admin-form button {
+      padding: 11px;
+      background: #4d3e44;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .admin-form button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .product-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5ede7;
+      gap: 8px;
+    }
+
+    .product-list-item span {
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .product-list-item button {
+      background: #fff0f0;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #c0392b;
+    }
+
+    .upload-area {
+      border: 2px dashed #e7dbd2;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #fdfbf9;
+      margin-bottom: 10px;
+    }
+
+    .upload-area:hover {
+      border-color: #c7b2a5;
+      background: #f9f3ed;
+    }
+
+    .upload-area.has-image {
+      border-color: #25D366;
+      background: #f0fdf4;
+    }
+
+    .upload-preview {
+      width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      border-radius: 12px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .upload-preview.show {
+      display: block;
+    }
+
+    .upload-status {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px 28px;
+      background: #ffffff;
+      border-top: 1px solid #f0e4da;
+      color: #6f6268;
+      font-size: 13px;
+    }
+
+    .secret-trigger {
+      display: inline-block;
+      color: #d5c7be;
+      cursor: default;
+      font-size: 12px;
+      margin-top: 6px;
+      user-select: none;
+    }
+
+    @supports (padding-top: env(safe-area-inset-top)) {
+      .floating-cart {
+        top: calc(16px + env(safe-area-inset-top));
+        right: calc(16px + env(safe-area-inset-right));
+      }
+      .cart,
+      .admin-panel {
+        padding-top: calc(20px + env(safe-area-inset-top));
+      }
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div id="screen-login" class="container">
-    <div class="card login-container shadow border-0">
-        <div class="card-header bg-dark text-white text-center py-3">
-            <h5 class="m-0 fw-bold"><i class="fa-solid fa-user-lock text-warning me-2"></i>Toserba Enak</h5>
-            <small class="text-muted">Ritel Internal Admin Gate</small>
-        </div>
-        <div class="card-body p-4">
-            <div id="login-alert" class="alert alert-danger d-none small">
-                <i class="fa-solid fa-triangle-exclamation me-1"></i> Username / Password salah!
-            </div>
-            <form id="formLogin" onsubmit="prosesLogin(event)">
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Username Admin</label>
-                    <input type="text" id="username" class="form-control form-control-sm" placeholder="adminenakkkk" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Password Security</label>
-                    <input type="password" id="password" class="form-control form-control-sm" placeholder="toserba2026" required>
-                </div>
-                <button type="submit" class="btn btn-dark btn-sm w-100 fw-bold">Masuk ke Sistem <i class="fa-solid fa-right-to-bracket ms-1"></i></button>
-            </form>
-        </div>
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <div class="form-overlay" id="formOverlay" onclick="closeOrderForm()"></div>
+  <div class="admin-overlay" id="adminOverlay" onclick="closeAllAdmin()"></div>
+
+  <div class="floating-cart" onclick="toggleCart()">
+    🛒 <span class="cart-badge" id="cart-count">0</span>
+  </div>
+
+  <section class="hero">
+    <h1>Kue Premium Spesial</h1>
+    <p>Fresh, lembut, dan dibuat dengan cinta untuk momen terbaikmu</p>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Cari kue favorit..." oninput="searchProduct()">
     </div>
-</div>
+  </section>
 
-<div id="screen-main" class="d-none">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
-        <div class="container-fluid px-4">
-            <span class="navbar-brand fw-bold">
-                <i class="fa-solid fa-shop text-info me-2"></i>Toserba Enak 
-                <span class="badge bg-danger fs-7 ms-2">Ritel Admin Panel</span>
-            </span>
-            <div class="navbar-nav ms-auto flex-row gap-2">
-                <button class="nav-link btn-tab active" onclick="bukaTab('dashboard')"><i class="fa-solid fa-chart-pie me-1"></i> Utama</button>
-                <button class="nav-link btn-tab" onclick="bukaTab('surat')"><i class="fa-solid fa-envelope me-1"></i> Surat</button>
-                <button class="nav-link btn-tab" onclick="bukaTab('memo')"><i class="fa-solid fa-file-lines me-1"></i> Memo</button>
-                <button class="nav-link btn-tab" onclick="bukaTab('absen')"><i class="fa-solid fa-calendar-check me-1"></i> Absen Ritel</button>
-                <button class="btn btn-sm btn-outline-danger ms-2" onclick="prosesLogout()"><i class="fa-solid fa-power-off"></i> Keluar</button>
-            </div>
-        </div>
-    </nav>
+  <section class="products" id="product-list"></section>
 
-    <div class="container-fluid px-4">
-
-        <div id="tab-dashboard" class="tab-konten">
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <div class="card bg-primary text-white border-0 shadow-sm">
-                        <div class="card-body p-3 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title m-0 small">Total Surat Masuk</h6>
-                                <h2 class="fw-bold m-0 mt-1" id="statSuratMasuk">1</h2>
-                            </div>
-                            <i class="fa-solid fa-circle-arrow-down fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-warning text-dark border-0 shadow-sm">
-                        <div class="card-body p-3 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="card-title m-0 small">Total Surat Keluar</h6>
-                                <h2 class="fw-bold m-0 mt-1" id="statSuratKeluar">0</h2>
-                            </div>
-                            <i class="fa-solid fa-circle-arrow-up fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card border-0 shadow-sm p-4 text-center bg-white">
-                <h4 class="fw-bold text-dark m-0">Selamat Datang di Panel Sistem Toserba Enak</h4>
-                <p class="text-muted small mt-1 mb-0">Sistem Pencatatan Log Internal Ritel dan Korespondensi Kantor.</p>
-            </div>
-        </div>
-
-        <div id="tab-surat" class="tab-konten d-none">
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-5">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-dark text-white fw-bold small">Pencatatan Surat Baru</div>
-                        <div class="card-body">
-                            <form id="formSurat" onsubmit="tambahSurat(event)">
-                                <div class="mb-2">
-                                    <label class="small fw-bold">Jenis Surat</label>
-                                    <select id="jenisSurat" class="form-select form-select-sm">
-                                        <option value="Masuk">Surat Masuk</option>
-                                        <option value="Keluar">Surat Keluar</option>
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="small fw-bold">Nomor Surat</label>
-                                    <input type="text" id="noSurat" class="form-control form-control-sm" required placeholder="005/SRT/VI/2026">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="small fw-bold">Asal / Tujuan</label>
-                                    <input type="text" id="kontakSurat" class="form-control form-control-sm" required placeholder="PT. Maju Jaya">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="small fw-bold">Perihal</label>
-                                    <input type="text" id="perihalSurat" class="form-control form-control-sm" required placeholder="Undangan Rapat">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-sm w-100">Simpan Surat</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-7">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-secondary text-white fw-bold small">Arsip Log Surat</div>
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-sm table-striped m-0 align-middle">
-                                <thead class="table-dark text-uppercase" style="font-size: 11px;">
-                                    <tr><th>Jenis</th><th>No. Surat</th><th>Asal/Tujuan</th><th>Perihal</th></tr>
-                                </thead>
-                                <tbody id="tabelSurat" style="font-size: 13px;">
-                                    <tr><td><span class="badge bg-success">Masuk</span></td><td>001/SM/2026</td><td>Kementerian Pusat</td><td>Kuota Anggaran</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-memo" class="tab-konten d-none">
-            <div class="row g-4">
-                <div class="col-lg-5 col-md-6">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-info text-white fw-bold small">Generator Memo Internal</div>
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <label class="small fw-bold">Pengirim & Jabatan</label>
-                                <input type="text" id="memoDari" class="form-control form-control-sm" value="Ahmad Subarjo (Direktur)">
-                            </div>
-                            <div class="mb-2">
-                                <label class="small fw-bold">Kepada</label>
-                                <input type="text" id="memoKepada" class="form-control form-control-sm" placeholder="Manajer Operasional">
-                            </div>
-                            <div class="mb-2">
-                                <label class="small fw-bold">Tanggal Memo</label>
-                                <input type="text" id="memoTanggal" class="form-control form-control-sm" value="03 Juni 2026">
-                            </div>
-                            <div class="mb-2">
-                                <label class="small fw-bold">Perihal</label>
-                                <input type="text" id="memoPerihal" class="form-control form-control-sm" placeholder="Tugas Luar Kota">
-                            </div>
-                            <div class="mb-3">
-                                <label class="small fw-bold">Isi Instruksi Memo</label>
-                                <textarea id="memoIsi" class="form-control form-control-sm" rows="6" placeholder="Tulis instruksi disini..."></textarea>
-                            </div>
-                            <button onclick="downloadMemoPDF()" class="btn btn-info btn-sm text-white fw-bold w-100"><i class="fa-solid fa-file-pdf me-1"></i>Download PDF Resmi</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-7 col-md-6">
-                    <div class="card shadow-sm p-4 bg-white border-0" style="border-top: 4px solid #0dcaf0; min-height: 430px; position: sticky; top: 20px;">
-                        <div class="text-center mb-2">
-                            <h5 class="fw-bold m-0 tracking-wide">MEMORANDUM</h5>
-                            <hr class="my-2" style="border-top: 2px solid #000;">
-                        </div>
-                        <div class="row small mb-2">
-                            <div class="col-3 col-xl-2 fw-bold">DARI</div><div class="col-9 col-xl-10" id="vDari">: Ahmad Subarjo (Direktur)</div>
-                            <div class="col-3 col-xl-2 fw-bold">KEPADA</div><div class="col-9" id="vKepada">: -</div>
-                            <div class="col-3 col-xl-2 fw-bold">TANGGAL</div><div class="col-9" id="vTanggal">: 03 Juni 2026</div>
-                            <div class="col-3 col-xl-2 fw-bold">PERIHAL</div><div class="col-9" id="vPerihal">: -</div>
-                        </div>
-                        <hr class="my-2" style="border-top: 1px dashed #ccc;">
-                        <p id="vIsi" style="white-space: pre-line;" class="text-muted small">Ketik isi memo di sebelah kiri...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-absen" class="tab-konten d-none">
-            <div class="row g-3">
-                <div class="col-xl-8">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-success text-white fw-bold d-flex justify-content-between align-items-center">
-                            <span><i class="fa-solid fa-calendar-check me-2"></i>Pencatatan Kehadiran Harian Toko</span>
-                            <span class="badge bg-light text-success fw-bold">Kerja Full 7 Hari</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-2 bg-light p-3 rounded mb-3 align-items-end">
-                                <div class="col-6 col-md-4">
-                                    <label class="small fw-bold text-muted mb-1">Pilih Bulan</label>
-                                    <select id="setBulan" class="form-select form-select-sm">
-                                        <option value="0">Januari</option><option value="1">Februari</option>
-                                        <option value="2">Maret</option><option value="3">April</option>
-                                        <option value="4">Mei</option><option value="5" selected>Juni</option>
-                                        <option value="6">Juli</option><option value="7">Agustus</option>
-                                        <option value="8">September</option><option value="9">Oktober</option>
-                                        <option value="10">November</option><option value="11">Desember</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <label class="small fw-bold text-muted mb-1">Ketik Tahun</label>
-                                    <input type="number" id="setTahun" class="form-control form-control-sm" value="2026" min="2020" max="2100">
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <button onclick="generateKalenderRitel()" class="btn btn-success btn-sm w-100 fw-bold"><i class="fa-solid fa-rotate me-1"></i>Buka & Muat Kalender</button>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive" style="max-height: 430px;">
-                                <table class="table table-sm table-bordered align-middle m-0">
-                                    <thead class="table-dark sticky-top" style="font-size: 12px;">
-                                        <tr>
-                                            <th style="width: 25%;">Tanggal</th>
-                                            <th style="width: 15%;">Hari</th>
-                                            <th style="width: 60%;">Ketik Nama Karyawan yang TIDAK HADIR / LIBUR</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabelKalenderRitel" style="font-size: 13px;">
-                                        <tr><td colspan="3" class="text-center text-muted small py-4">Tentukan Bulan & Tahun lalu klik <b>"Buka & Muat Kalender"</b>.</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4">
-                    <div class="card shadow-sm border-0 mb-3">
-                        <div class="card-header bg-dark text-white fw-bold small"><i class="fa-solid fa-square-poll-vertical me-2"></i>Live Laporan Libur/Absen</div>
-                        <div class="card-body p-0 table-responsive" style="max-height: 200px;">
-                            <table class="table table-sm table-striped m-0 text-center" style="font-size: 12px;">
-                                <thead class="table-secondary fw-bold">
-                                    <tr><th>Nama Staff</th><th>Total Hari Tidak Hadir</th></tr>
-                                </thead>
-                                <tbody id="tabelReportAbsen">
-                                    <tr><td colspan="2" class="text-muted py-3">Belum ada input data ketidakhadiran.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0">
-                        <div class="card-header bg-secondary text-white fw-bold small"><i class="fa-solid fa-chart-bar me-2"></i>Grafik Statistik Ketidakhadiran</div>
-                        <div class="card-body bg-white p-2">
-                            <div class="chart-container">
-                                <canvas id="chartAbsenRitel"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="cart" id="cart">
+    <div class="cart-header">
+      <span>🛒 Keranjang</span>
+      <span class="close" onclick="closeCart()">✕</span>
     </div>
-</div>
+    <div id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="total">
+        <span>Total</span>
+        <span>Rp <span id="total">0</span></span>
+      </div>
+      <button class="btn-order" onclick="openOrderForm()">💬 Pesan via WhatsApp</button>
+    </div>
+  </div>
 
-<script>
-    // --- LOGIN SYSTEM SYSTEM STORAGE ---
-    if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-        document.getElementById('screen-login').classList.add('d-none');
-        document.getElementById('screen-main').classList.remove('d-none');
-    }
-    function prosesLogin(e) {
-        e.preventDefault();
-        if(document.getElementById('username').value === "adminenakkkk" && document.getElementById('password').value === "toserba2026") {
-            sessionStorage.setItem('isAdminLoggedIn', 'true');
-            document.getElementById('screen-login').classList.add('d-none');
-            document.getElementById('screen-main').classList.remove('d-none');
-        } else { document.getElementById('login-alert').classList.remove('d-none'); }
-    }
-    function prosesLogout() { sessionStorage.removeItem('isAdminLoggedIn'); window.location.reload(); }
+  <div class="form-modal" id="orderFormModal">
+    <span class="close-form" onclick="closeOrderForm()">✕</span>
+    <h3>📋 Data Pemesan</h3>
+    <div class="form-group">
+      <label>Nama Lengkap *</label>
+      <input type="text" id="customerName" placeholder="Masukkan nama Anda">
+    </div>
+    <div class="form-group">
+      <label>Nomor Telepon *</label>
+      <input type="tel" id="customerPhone" placeholder="08xxxxxxxxxx">
+    </div>
+    <div class="form-group">
+      <label>Alamat Lengkap *</label>
+      <textarea id="customerAddress" placeholder="Jl. Contoh, No. 123, Kota"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Catatan (opsional)</label>
+      <textarea id="customerNote" placeholder="Misal: lilin angka 21, kartu ucapan..."></textarea>
+    </div>
+    <button class="btn-submit-order" onclick="submitOrder()">🚀 Kirim ke WhatsApp</button>
+  </div>
 
-    // --- TAB SYSTEM ---
-    function bukaTab(namaTab) {
-        document.querySelectorAll('.tab-konten').forEach(el => el.classList.add('d-none'));
-        document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + namaTab).classList.remove('d-none');
-        event.currentTarget.classList.add('active');
+  <div class="admin-login-modal" id="adminLoginModal">
+    <span class="close-modal" onclick="closeAdminLogin()">✕</span>
+    <h3>🔐 Admin</h3>
+    <input type="text" id="adminUser" placeholder="Username">
+    <input type="password" id="adminPass" placeholder="Password">
+    <button onclick="adminLogin()">Masuk</button>
+    <p style="font-size:11px;color:#999;text-align:center;margin-top:8px;">admin / admin123</p>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <div class="cart-header">
+      <span>⚙️ Admin</span>
+      <span class="close" onclick="closeAllAdmin()">✕</span>
+    </div>
+    <div id="adminDashboard">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('workspace')">Workspace</button>
+        <button class="admin-tab" onclick="switchTab('preview')">Preview</button>
+      </div>
+      <div class="admin-content active" id="workspaceTab">
+        <h4 style="margin-bottom:8px;">Nomor WhatsApp</h4>
+        <div class="admin-form">
+          <input type="text" id="waNumber" placeholder="628xxxxxxxxxx">
+          <button onclick="saveWaNumber()">💾 Simpan</button>
+        </div>
+
+        <h4 style="margin:16px 0 8px;">Tambah Produk Baru</h4>
+        <div class="admin-form">
+          <input type="text" id="newName" placeholder="Nama Kue">
+          <input type="number" id="newPrice" placeholder="Harga (Rp)">
+          <label style="font-size:13px;font-weight:600;color:#5e4b51;">Gambar Produk</label>
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
+            <span id="uploadText">📸 Klik untuk pilih gambar</span>
+            <img id="uploadPreview" class="upload-preview" alt="Preview">
+            <div class="upload-status" id="uploadStatus"></div>
+          </div>
+          <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
+          <input type="hidden" id="newImage" value="">
+          <button id="btnAddProduct" onclick="addProduct()">➕ Tambah Produk</button>
+        </div>
+
+        <h4 style="margin:16px 0 8px;">Daftar Produk</h4>
+        <div id="adminProductList"></div>
+      </div>
+      <div class="admin-content" id="previewTab">
+        <h4 style="margin-bottom:10px;">Preview Toko</h4>
+        <div id="previewProducts"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Cheseely.id · Fresh Cake Everyday</div>
+    <div class="secret-trigger" id="secretAdminTrigger">cheseely</div>
+  </footer>
+
+  <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
+  <script>
+    const CLOUDINARY_CLOUD_NAME = 'donrnz9gy';
+    const CLOUDINARY_UPLOAD_PRESET = 'cheseely_preset';
+    let uploadedImageUrl = '';
+
+    function getProducts() {
+      try {
+        const data = localStorage.getItem('cheseely_products');
+        if (data) {
+          const parsed = JSON.parse(data);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return [
+        { name: 'Cheese Cake', price: 95000, image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop' },
+        { name: 'Red Velvet', price: 120000, image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=400&fit=crop' },
+        { name: 'Chocolate', price: 110000, image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=400&fit=crop' },
+        { name: 'Strawberry', price: 105000, image: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=400&h=400&fit=crop' },
+        { name: 'Tiramisu', price: 135000, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=400&fit=crop' },
+        { name: 'Matcha Cake', price: 115000, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop' }
+      ];
     }
 
-    // --- MINI SURAT LOGIC ---
-    let countMasuk = 1, countKeluar = 0;
-    function tambahSurat(e) {
-        e.preventDefault();
-        const jenis = document.getElementById('jenisSurat').value;
-        const color = jenis === 'Masuk' ? 'bg-success' : 'bg-warning text-dark';
-        document.getElementById('tabelSurat').innerHTML += `<tr>
-            <td><span class="badge ${color}">${jenis}</span></td>
-            <td>${document.getElementById('noSurat').value}</td>
-            <td>${document.getElementById('kontakSurat').value}</td>
-            <td>${document.getElementById('perihalSurat').value}</td>
-        </tr>`;
-        if(jenis === 'Masuk') { countMasuk++; document.getElementById('statSuratMasuk').innerText = countMasuk; }
-        else { countKeluar++; document.getElementById('statSuratKeluar').innerText = countKeluar; }
-        document.getElementById('formSurat').reset();
+    function saveProducts(arr) { localStorage.setItem('cheseely_products', JSON.stringify(arr)); }
+    function getWaNumber() { return localStorage.getItem('cheseely_wa') || '6281234567890'; }
+    function saveWaNumberToLocal(n) { localStorage.setItem('cheseely_wa', n); }
+
+    let products = getProducts();
+    let waNumber = getWaNumber();
+    let cart = [];
+    let total = 0;
+    let isAdminLoggedIn = false;
+
+    function handleImageSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('uploadPreview').src = e.target.result;
+        document.getElementById('uploadPreview').classList.add('show');
+        document.getElementById('uploadText').style.display = 'none';
+        document.getElementById('uploadArea').classList.add('has-image');
+      };
+      reader.readAsDataURL(file);
+      uploadToCloudinary(file);
     }
 
-    // --- MEMO LIVE SYNC & PDF ---
-    const ids = ['memoDari', 'memoKepada', 'memoTanggal', 'memoPerihal', 'memoIsi'];
-    ids.forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
-            document.getElementById('vDari').innerText = ": " + document.getElementById('memoDari').value;
-            document.getElementById('vKepada').innerText = ": " + (document.getElementById('memoKepada').value || '-');
-            document.getElementById('vTanggal').innerText = ": " + (document.getElementById('memoTanggal').value || '-');
-            document.getElementById('vPerihal').innerText = ": " + (document.getElementById('memoPerihal').value || '-');
-            document.getElementById('vIsi').innerText = document.getElementById('memoIsi').value || 'Ketik isi memo di sebelah kiri...';
-        });
+    function uploadToCloudinary(file) {
+      const statusEl = document.getElementById('uploadStatus');
+      const btnAdd = document.getElementById('btnAddProduct');
+
+      statusEl.textContent = '⏳ Uploading...';
+      statusEl.style.color = '#b4846c';
+      btnAdd.disabled = true;
+      uploadedImageUrl = '';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('folder', 'cheseely-products');
+
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.secure_url) {
+          uploadedImageUrl = data.secure_url;
+          document.getElementById('newImage').value = uploadedImageUrl;
+          statusEl.textContent = `✅ Uploaded! (${(data.bytes / 1024).toFixed(1)} KB)`;
+          statusEl.style.color = '#25D366';
+          btnAdd.disabled = false;
+        } else {
+          throw new Error(data.error?.message || 'Upload failed');
+        }
+      })
+      .catch(() => {
+        statusEl.textContent = '❌ Upload gagal, coba lagi';
+        statusEl.style.color = '#c0392b';
+        btnAdd.disabled = false;
+        uploadedImageUrl = '';
+      });
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('product-list');
+      if (!container) return;
+      const prods = getProducts();
+      container.innerHTML = prods.map(p => `
+        <div class="card">
+          <img src="${p.image}" alt="${p.name}" loading="lazy">
+          <div class="card-content">
+            <h3>${p.name}</h3>
+            <div class="price">Rp ${p.price.toLocaleString('id-ID')}</div>
+            <button class="btn-add" onclick="addToCart('${p.name.replace(/'/g, "\\'")}', ${p.price})">+ Keranjang</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCart() { document.getElementById('cart').classList.toggle('active'); document.getElementById('cartOverlay').classList.toggle('active'); }
+    function closeCart() { document.getElementById('cart').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      total += price;
+      updateCart();
+    }
+
+    function removeFromCart(i) { total -= cart[i].price; cart.splice(i, 1); updateCart(); }
+
+    function updateCart() {
+      const container = document.getElementById('cart-items');
+      if (!container) return;
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="color:#8f7e7a;text-align:center;padding:30px 0;">Keranjang kosong</p>';
+      } else {
+        container.innerHTML = cart.map((item, i) => `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+            </div>
+            <button class="btn-remove" onclick="removeFromCart(${i})">✕</button>
+          </div>
+        `).join('');
+      }
+      document.getElementById('total').innerText = total.toLocaleString('id-ID');
+      document.getElementById('cart-count').innerText = cart.length;
+    }
+
+    function openOrderForm() {
+      if (cart.length === 0) { alert('Keranjang masih kosong!'); return; }
+      document.getElementById('orderFormModal').classList.add('active');
+      document.getElementById('formOverlay').classList.add('active');
+    }
+
+    function closeOrderForm() {
+      document.getElementById('orderFormModal').classList.remove('active');
+      document.getElementById('formOverlay').classList.remove('active');
+    }
+
+    function submitOrder() {
+      const name = document.getElementById('customerName').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const address = document.getElementById('customerAddress').value.trim();
+      const note = document.getElementById('customerNote').value.trim();
+
+      if (!name || !phone || !address) {
+        alert('Mohon isi Nama, Nomor Telepon, dan Alamat!');
+        return;
+      }
+
+      let message = '🍰 *PESANAN BARU - Cheseely.id*%0A%0A';
+      message += `👤 *Nama:* ${name}%0A`;
+      message += `📞 *Telp:* ${phone}%0A`;
+      message += `📍 *Alamat:* ${address}%0A`;
+      if (note) message += `📝 *Catatan:* ${note}%0A`;
+      message += '%0A━━━━━━━━━━━━━━━%0A';
+      message += `📋 *Detail Pesanan:*%0A`;
+      cart.forEach((item, i) => { message += `${i + 1}. ${item.name} - Rp ${item.price.toLocaleString('id-ID')}%0A`; });
+      message += `%0A💰 *Total: Rp ${total.toLocaleString('id-ID')}*%0A`;
+      message += '%0A━━━━━━━━━━━━━━━%0A';
+      message += 'Terima kasih! 🙏';
+
+      window.open(`https://wa.me/${getWaNumber()}?text=${message}`, '_blank');
+      closeOrderForm();
+    }
+
+    function searchProduct() {
+      const kw = document.getElementById('search')?.value.toLowerCase().trim() || '';
+      document.querySelectorAll('.card').forEach(card => {
+        const t = card.querySelector('h3')?.innerText.toLowerCase() || '';
+        card.style.display = t.includes(kw) ? 'flex' : 'none';
+      });
+    }
+
+    function openAdminLogin() { document.getElementById('adminLoginModal').classList.add('active'); document.getElementById('adminOverlay').classList.add('active'); }
+    function closeAdminLogin() { document.getElementById('adminLoginModal').classList.remove('active'); document.getElementById('adminOverlay').classList.remove('active'); }
+    function openAdminPanel() { document.getElementById('adminPanel').classList.add('active'); document.getElementById('adminOverlay').classList.add('active'); document.getElementById('waNumber').value = getWaNumber(); renderAdminProductList(); }
+    function closeAllAdmin() { document.getElementById('adminPanel').classList.remove('active'); document.getElementById('adminLoginModal').classList.remove('active'); document.getElementById('adminOverlay').classList.remove('active'); }
+
+    function adminLogin() {
+      if (document.getElementById('adminUser')?.value === 'admin' && document.getElementById('adminPass')?.value === 'admin123') {
+        isAdminLoggedIn = true;
+        closeAdminLogin();
+        openAdminPanel();
+      } else alert('Username atau password salah!');
+    }
+
+    function switchTab(t) {
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+      if (t === 'workspace') {
+        document.querySelector('.admin-tab:nth-child(1)')?.classList.add('active');
+        document.getElementById('workspaceTab')?.classList.add('active');
+      } else {
+        document.querySelector('.admin-tab:nth-child(2)')?.classList.add('active');
+        document.getElementById('previewTab')?.classList.add('active');
+        renderPreview();
+      }
+    }
+
+    function saveWaNumber() {
+      const n = document.getElementById('waNumber')?.value.trim();
+      if (n) { waNumber = n; saveWaNumberToLocal(n); alert('Nomor tersimpan!'); }
+    }
+
+    function addProduct() {
+      const n = document.getElementById('newName')?.value.trim();
+      const p = parseInt(document.getElementById('newPrice')?.value);
+      const i = uploadedImageUrl || document.getElementById('newImage')?.value.trim();
+
+      if (!n || !p || !i) { alert('Semua field wajib diisi (termasuk upload gambar)!'); return; }
+      const prods = getProducts();
+      prods.push({ name: n, price: p, image: i });
+      saveProducts(prods);
+      products = prods;
+      renderProducts();
+      renderAdminProductList();
+
+      document.getElementById('newName').value = '';
+      document.getElementById('newPrice').value = '';
+      document.getElementById('newImage').value = '';
+      uploadedImageUrl = '';
+      document.getElementById('uploadPreview').classList.remove('show');
+      document.getElementById('uploadText').style.display = '';
+      document.getElementById('uploadArea').classList.remove('has-image');
+      document.getElementById('uploadStatus').textContent = '';
+      document.getElementById('imageInput').value = '';
+      alert('Produk ditambahkan!');
+    }
+
+    function deleteProduct(i) {
+      if (!confirm('Hapus produk ini?')) return;
+      const prods = getProducts();
+      prods.splice(i, 1);
+      saveProducts(prods);
+      products = prods;
+      renderProducts();
+      renderAdminProductList();
+      renderPreview();
+    }
+
+    function renderAdminProductList() {
+      const c = document.getElementById('adminProductList');
+      if (!c) return;
+      c.innerHTML = getProducts().map((p, i) => `<div class="product-list-item"><span>${p.name} · Rp${p.price.toLocaleString('id-ID')}</span><button onclick="deleteProduct(${i})">🗑️</button></div>`).join('');
+    }
+
+    function renderPreview() {
+      const c = document.getElementById('previewProducts');
+      if (!c) return;
+      c.innerHTML = getProducts().map(p => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5ede7;"><img src="${p.image}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;"><div><strong style="font-size:14px;">${p.name}</strong><br><span style="color:#b4846c;font-size:13px;">Rp${p.price.toLocaleString('id-ID')}</span></div></div>`).join('');
+    }
+
+    let clicks = 0, timer = null;
+    document.getElementById('secretAdminTrigger')?.addEventListener('click', () => {
+      clicks++;
+      clearTimeout(timer);
+      if (clicks >= 5) { clicks = 0; isAdminLoggedIn ? openAdminPanel() : openAdminLogin(); }
+      timer = setTimeout(() => clicks = 0, 2000);
     });
-    function downloadMemoPDF() {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
-        doc.setFont("helvetica", "bold").setFontSize(20).text("MEMORANDUM", 105, 20, { align: "center" }).line(20, 25, 190, 25);
-        doc.setFontSize(11).setFont("helvetica", "normal");
-        doc.text(`DARI          : ${document.getElementById('memoDari').value}`, 20, 35);
-        doc.text(`KEPADA      : ${document.getElementById('memoKepada').value || '-'}`, 20, 42);
-        doc.text(`TANGGAL    : ${document.getElementById('memoTanggal').value || '-'}`, 20, 49);
-        doc.text(`PERIHAL      : ${document.getElementById('memoPerihal').value || '-'}`, 20, 56).line(20, 62, 190, 62);
-        doc.text(doc.splitTextToSize(document.getElementById('memoIsi').value || '-', 170), 20, 72);
-        doc.save(`Memo_Toserba.pdf`);
+
+    renderProducts();
+    updateCart();
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8zBpyRqgMOt2ULREcpYfsw8W_gUJhkXs",
+      authDomain: "arsip-digital-5120c.firebaseapp.com",
+      projectId: "arsip-digital-5120c",
+      storageBucket: "arsip-digital-5120c.firebasestorage.app",
+      messagingSenderId: "826061942517",
+      appId: "1:826061942517:web:9615ff8b68bb097b0a5fbc",
+      measurementId: "G-Q3CQ3E7C15"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    try {
+      getAnalytics(app);
+    } catch (e) {
+      console.log("Analytics tidak aktif di environment ini.");
     }
 
-    // --- CORE FITUR BARU: GENERATE KALENDER RITEL UTUH & ENGINE HITUNG GRAFIK LIVE ---
-    let chartInstance = null; // Variabel penampung objek grafik Chart.js
-
-    function generateKalenderRitel() {
-        const bln = parseInt(document.getElementById('setBulan').value);
-        const thn = parseInt(document.getElementById('setTahun').value);
-        
-        // Cari tahu jumlah hari dalam bulan tersebut secara akurat (termasuk tahun kabisat)
-        const jumlahHari = new Date(thn, bln + 1, 0).getDate();
-        
-        const namaHariIndo = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-        const namaBulanIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        
-        let htmlRows = "";
-
-        for (let h = 1; h <= jumlahHari; h++) {
-            const dateObj = new Date(thn, bln, h);
-            const hariNama = namaHariIndo[dateObj.getDay()];
-            
-            // Input teks biasa, admin bebas mengetik nama-nama staff yang libur/absen dipisahkan tanda koma
-            htmlRows += `<tr>
-                <td><strong>${h} ${namaBulanIndo[bln]} ${thn}</strong></td>
-                <td><span class="badge bg-light text-dark border w-100">${hariNama}</span></td>
-                <td>
-                    <input type="text" class="form-control form-control-sm input-absen-staff" 
-                           placeholder="Contoh: Budi, Sinta, Doni (Kosongkan jika semua masuk)" 
-                           oninput="hitungUlangLaporanDanGrafik()">
-                </td>
-            </tr>`;
-        }
-        document.getElementById('tabelKalenderRitel').innerHTML = htmlRows;
-        hitungUlangLaporanDanGrafik(); // Reset laporan ke nol saat kalender berganti
-    }
-
-    // ENGINE HITUNG OTOMATIS & UPDATE GRAFIK SECARA LIVE
-    function hitungUlangLaporanDanGrafik() {
-        const inputs = document.querySelectorAll('.input-absen-staff');
-        let dataRekap = {};
-
-        // Loop melintasi seluruh kolom input tanggal di tabel
-        inputs.forEach(input => {
-            const teks = input.value.trim();
-            if (teks !== "") {
-                // Memisahkan nama jika admin menulis banyak orang sekaligus pakai koma (Budi, Doni)
-                const listNama = teks.split(',');
-                listNama.forEach(nama => {
-                    const namaBersih = nama.trim().toUpperCase(); // Samakan huruf besar biar ga dobel
-                    if(namaBersih !== "") {
-                        dataRekap[namaBersih] = (dataRekap[namaBersih] || 0) + 1;
-                    }
-                });
-            }
-        });
-
-        // 1. Perbarui Isian Tabel Laporan Angka Ringkasan
-        const tbodyReport = document.getElementById('tabelReportAbsen');
-        const keys = Object.keys(dataRekap);
-
-        if(keys.length === 0) {
-            tbodyReport.innerHTML = `<tr><td colspan="2" class="text-muted py-3">Belum ada input data ketidakhadiran.</td></tr>`;
-            updateVisualGrafik([], []); // Bersihkan grafik
-            return;
-        }
-
-        let htmlReport = "";
-        let labelsGrafik = [];
-        let angkaGrafik = [];
-
-        // Urutkan alfabet nama staff
-        keys.sort().forEach(namaStaff => {
-            htmlReport += `<tr>
-                <td class="text-start fw-bold text-danger px-3"><i class="fa-solid fa-user-minus me-2"></i>${namaStaff}</td>
-                <td><span class="badge bg-danger fs-6">${dataRekap[namaStaff]} Hari</span></td>
-            </tr>`;
-            labelsGrafik.push(namaStaff);
-            angkaGrafik.push(dataRekap[namaStaff]);
-        });
-        tbodyReport.innerHTML = htmlReport;
-
-        // 2. Tembakkan Data Baru ke Render Grafik Batang (Chart.js)
-        updateVisualGrafik(labelsGrafik, angkaGrafik);
-    }
-
-    // FUNGSI RENDER GRAFIK DENGAN PROTEKSI RE-DRAW CHART.JS
-    function updateVisualGrafik(labels, data) {
-        const ctx = document.getElementById('chartAbsenRitel').getContext('2d');
-        
-        // Hancurkan instance lama terlebih dahulu agar grafik tidak tumpang tindih/error saat di-hover
-        if (chartInstance !== null) {
-            chartInstance.destroy();
-        }
-
-        // Gambar grafik batang baru
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Hari Libur / Absen',
-                    data: data,
-                    backgroundColor: 'rgba(220, 53, 69, 0.75)', // Merah kecerahan ritel
-                    borderColor: 'rgba(220, 53, 69, 1)',
-                    borderWidth: 1,
-                    barThickness: 25
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 } // Angka bulat tegas (1, 2, 3 hari...)
-                    }
-                },
-                plugins: {
-                    legend: { display: false } // Sembunyikan label atas biar rapi
-                }
-            }
-        });
-    }
-</script>
+    window.firebaseApp = app;
+  </script>
 </body>
 </html>
