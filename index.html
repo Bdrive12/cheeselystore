@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,6 +12,7 @@
       box-sizing: border-box;
       font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
+
     body {
       background: #faf7f4;
       color: #3e3640;
@@ -20,6 +22,7 @@
       min-height: 100vh;
       min-height: 100dvh;
     }
+
     .cart-overlay,
     .form-overlay,
     .admin-overlay {
@@ -36,12 +39,14 @@
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
+
     .cart-overlay.active,
     .form-overlay.active,
     .admin-overlay.active {
       opacity: 1;
       visibility: visible;
     }
+
     .floating-cart {
       position: fixed;
       top: 16px;
@@ -63,13 +68,16 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
       transition: all 0.25s ease;
     }
+
     .floating-cart:active {
       transform: scale(0.95);
       background: #f7efe8;
     }
+
     .cart-badge {
       background: #b4846c;
-      color: white;      font-size: 12px;
+      color: white;
+      font-size: 12px;
       width: 22px;
       height: 22px;
       border-radius: 50%;
@@ -78,12 +86,14 @@
       justify-content: center;
       font-weight: 700;
     }
+
     .hero {
       padding: 56px 20px 28px;
       text-align: center;
       background: #ffffff;
       border-bottom: 1px solid #f0e7e1;
     }
+
     .hero h1 {
       font-size: clamp(24px, 8vw, 38px);
       font-weight: 700;
@@ -92,6 +102,7 @@
       margin-bottom: 8px;
       line-height: 1.2;
     }
+
     .hero p {
       color: #7b6e73;
       font-size: clamp(14px, 4vw, 17px);
@@ -99,11 +110,13 @@
       margin: 0 auto 24px;
       padding: 0 10px;
     }
+
     .search-box {
       max-width: 480px;
       margin: 0 auto;
       padding: 0 8px;
     }
+
     .search-box input {
       width: 100%;
       padding: 14px 20px;
@@ -115,11 +128,13 @@
       outline: none;
       transition: 0.25s ease;
     }
+
     .search-box input:focus {
       border-color: #c7b2a5;
       background: #ffffff;
       box-shadow: 0 8px 20px rgba(180, 150, 130, 0.08);
     }
+
     .products {
       max-width: 1200px;
       margin: 16px auto;
@@ -128,6 +143,7 @@
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 14px;
     }
+
     @media (min-width: 600px) {
       .products {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -135,6 +151,7 @@
         padding: 12px 20px 40px;
       }
     }
+
     .card {
       background: #ffffff;
       border-radius: 20px;
@@ -145,20 +162,24 @@
       display: flex;
       flex-direction: column;
     }
+
     .card:active {
       transform: scale(0.98);
     }
+
     .card img {
       width: 100%;
       aspect-ratio: 1/1;
       object-fit: cover;
     }
+
     .card-content {
       padding: 12px 12px 14px;
       display: flex;
       flex-direction: column;
       flex: 1;
     }
+
     .card h3 {
       font-size: clamp(14px, 3.5vw, 17px);
       font-weight: 600;
@@ -166,12 +187,14 @@
       margin-bottom: 4px;
       line-height: 1.3;
     }
+
     .price {
       font-size: clamp(15px, 4vw, 18px);
       font-weight: 700;
       color: #b4846c;
       margin: 4px 0 10px;
     }
+
     .btn-add {
       width: 100%;
       padding: 10px 12px;
@@ -187,10 +210,12 @@
       margin-top: auto;
       -webkit-tap-highlight-color: transparent;
     }
+
     .btn-add:active {
       background: #e7d6ca;
       transform: scale(0.97);
     }
+
     .cart {
       position: fixed;
       right: -100%;
@@ -209,10 +234,12 @@
       flex-direction: column;
       visibility: hidden;
     }
+
     .cart.active {
       right: 0;
       visibility: visible;
     }
+
     .cart-header {
       display: flex;
       justify-content: space-between;
@@ -224,6 +251,7 @@
       padding-bottom: 12px;
       border-bottom: 2px solid #f5ede7;
     }
+
     .close {
       cursor: pointer;
       font-size: 26px;
@@ -232,13 +260,16 @@
       border-radius: 50%;
       transition: 0.2s;
     }
+
     .close:active {
       background: #f5ede7;
     }
+
     #cart-items {
       flex: 1;
       min-height: 120px;
     }
+
     .cart-item {
       padding: 12px 0;
       border-bottom: 1px solid #f5ede7;
@@ -247,10 +278,12 @@
       align-items: center;
       gap: 10px;
     }
+
     .cart-item-info {
       flex: 1;
       min-width: 0;
     }
+
     .cart-item-name {
       font-weight: 600;
       font-size: 14px;
@@ -258,10 +291,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .cart-item-price {
       font-size: 13px;
       color: #8f7e7a;
     }
+
     .btn-remove {
       background: #fff0f0;
       border: none;
@@ -272,11 +307,13 @@
       color: #c0392b;
       flex-shrink: 0;
     }
+
     .cart-footer {
       border-top: 2px solid #f5ede7;
       padding-top: 14px;
       margin-top: auto;
     }
+
     .total {
       font-size: 20px;
       font-weight: 700;
@@ -285,6 +322,7 @@
       justify-content: space-between;
       margin-bottom: 14px;
     }
+
     .btn-order {
       width: 100%;
       padding: 14px;
@@ -298,10 +336,12 @@
       transition: 0.2s;
       letter-spacing: 0.3px;
     }
+
     .btn-order:active {
       background: #9f7260;
       transform: scale(0.97);
     }
+
     .form-modal {
       position: fixed;
       top: 50%;
@@ -320,11 +360,13 @@
       max-height: 85vh;
       overflow-y: auto;
     }
+
     .form-modal.active {
       opacity: 1;
       visibility: visible;
       transform: translate(-50%, -50%) scale(1);
     }
+
     .form-modal h3 {
       font-size: 20px;
       font-weight: 700;
@@ -332,9 +374,11 @@
       margin-bottom: 18px;
       text-align: center;
     }
+
     .form-group {
       margin-bottom: 14px;
     }
+
     .form-group label {
       display: block;
       font-size: 13px;
@@ -342,6 +386,7 @@
       color: #5e4b51;
       margin-bottom: 4px;
     }
+
     .form-group input,
     .form-group textarea {
       width: 100%;
@@ -354,15 +399,18 @@
       transition: 0.2s;
       font-family: inherit;
     }
+
     .form-group textarea {
       resize: vertical;
       min-height: 70px;
     }
+
     .form-group input:focus,
     .form-group textarea:focus {
       border-color: #c7b2a5;
       background: #fff;
     }
+
     .btn-submit-order {
       width: 100%;
       padding: 14px;
@@ -376,10 +424,12 @@
       letter-spacing: 0.3px;
       margin-top: 6px;
     }
+
     .btn-submit-order:active {
       background: #1ebe5c;
       transform: scale(0.97);
     }
+
     .close-form {
       position: absolute;
       top: 10px;
@@ -389,6 +439,7 @@
       color: #8f7e7a;
       padding: 4px 8px;
     }
+
     .admin-login-modal {
       position: fixed;
       top: 50%;
@@ -405,16 +456,19 @@
       visibility: hidden;
       transition: all 0.3s ease;
     }
+
     .admin-login-modal.active {
       opacity: 1;
       visibility: visible;
       transform: translate(-50%, -50%) scale(1);
     }
+
     .admin-login-modal h3 {
       text-align: center;
       margin-bottom: 16px;
       color: #3a2f35;
     }
+
     .admin-login-modal input {
       width: 100%;
       padding: 12px;
@@ -423,6 +477,7 @@
       border: 1px solid #e7dbd2;
       font-size: 14px;
     }
+
     .admin-login-modal button {
       width: 100%;
       padding: 12px;
@@ -433,6 +488,7 @@
       font-weight: 600;
       font-size: 14px;
     }
+
     .close-modal {
       position: absolute;
       top: 8px;
@@ -441,6 +497,7 @@
       font-size: 20px;
       color: #8f7e7a;
     }
+
     .admin-panel {
       position: fixed;
       right: -100%;
@@ -457,10 +514,12 @@
       z-index: 1000;
       visibility: hidden;
     }
+
     .admin-panel.active {
       right: 0;
       visibility: visible;
     }
+
     .admin-tabs {
       display: flex;
       gap: 8px;
@@ -468,6 +527,7 @@
       border-bottom: 2px solid #f0e4db;
       padding-bottom: 10px;
     }
+
     .admin-tab {
       padding: 8px 16px;
       border-radius: 20px;
@@ -478,28 +538,34 @@
       font-size: 13px;
       color: #4d3e44;
     }
+
     .admin-tab.active {
       background: #4d3e44;
       color: white;
     }
+
     .admin-content {
       display: none;
     }
+
     .admin-content.active {
       display: block;
     }
+
     .admin-form {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 18px;
     }
+
     .admin-form input {
       padding: 11px 14px;
       border-radius: 12px;
       border: 1px solid #e7dbd2;
       font-size: 14px;
     }
+
     .admin-form button {
       padding: 11px;
       background: #4d3e44;
@@ -510,10 +576,12 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     .admin-form button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
     .product-list-item {
       display: flex;
       justify-content: space-between;
@@ -522,10 +590,12 @@
       border-bottom: 1px solid #f5ede7;
       gap: 8px;
     }
+
     .product-list-item span {
       font-size: 13px;
       flex: 1;
     }
+
     .product-list-item button {
       background: #fff0f0;
       border: none;
@@ -535,6 +605,7 @@
       font-size: 12px;
       color: #c0392b;
     }
+
     .upload-area {
       border: 2px dashed #e7dbd2;
       border-radius: 16px;
@@ -545,14 +616,17 @@
       background: #fdfbf9;
       margin-bottom: 10px;
     }
+
     .upload-area:hover {
       border-color: #c7b2a5;
       background: #f9f3ed;
     }
+
     .upload-area.has-image {
       border-color: #25D366;
       background: #f0fdf4;
     }
+
     .upload-preview {
       width: 100%;
       max-height: 150px;
@@ -561,13 +635,16 @@
       margin-top: 8px;
       display: none;
     }
+
     .upload-preview.show {
       display: block;
     }
+
     .upload-status {
       font-size: 12px;
       margin-top: 4px;
     }
+
     footer {
       text-align: center;
       padding: 24px 16px 28px;
@@ -576,6 +653,7 @@
       color: #6f6268;
       font-size: 13px;
     }
+
     .secret-trigger {
       display: inline-block;
       color: #d5c7be;
@@ -584,6 +662,7 @@
       margin-top: 6px;
       user-select: none;
     }
+
     @supports (padding-top: env(safe-area-inset-top)) {
       .floating-cart {
         top: calc(16px + env(safe-area-inset-top));
@@ -600,7 +679,6 @@
 
   <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
   <div class="form-overlay" id="formOverlay" onclick="closeOrderForm()"></div>
-  <div class="form-overlay" id="qrisOverlay" onclick="closeQrisModal()"></div>
   <div class="admin-overlay" id="adminOverlay" onclick="closeAllAdmin()"></div>
 
   <div class="floating-cart" onclick="toggleCart()">
@@ -651,23 +729,7 @@
       <label>Catatan (opsional)</label>
       <textarea id="customerNote" placeholder="Misal: lilin angka 21, kartu ucapan..."></textarea>
     </div>
-    <button class="btn-submit-order" onclick="submitOrder()">🚀 Generate QRIS & Lanjutkan</button>
-  </div>
-
-  <div class="form-modal" id="qrisModal">
-    <span class="close-form" onclick="closeQrisModal()">✕</span>
-    <h3 style="color:#b4846c; margin-bottom: 10px;">💳 Pembayaran QRIS</h3>
-    <div style="text-align: center; margin-bottom: 14px;">
-      <span style="font-size: 13px; color: #7b6e73;">Total Tagihan Anda:</span>
-      <div style="font-size: 24px; font-weight: 800; color: #b4846c; margin-top: 2px;">Rp <span id="qrisTotal">0</span></div>
-    </div>
-    <div style="text-align: center; margin: 12px 0;">
-      <img id="qrisImage" src="" alt="QRIS Code" style="width: 220px; height: 220px; border: 1.5px solid #e7dbd2; border-radius: 16px; padding: 10px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-    </div>
-    <p style="font-size: 12px; color: #8f7e7a; text-align: center; margin-bottom: 18px; padding: 0 10px; line-height: 1.4;">
-      Scan QRIS di atas memakai Aplikasi Mobile Banking atau E-Wallet (Gopay, OVO, Dana, LinkAja, dll). Nominal akan <strong>terisi otomatis</strong>.
-    </p>
-    <button class="btn-submit-order" onclick="redirectToWhatsApp()" style="background: #25D366;">✅ Sudah Bayar, Kirim via WhatsApp</button>
+    <button class="btn-submit-order" onclick="submitOrder()">🚀 Kirim ke WhatsApp</button>
   </div>
 
   <div class="admin-login-modal" id="adminLoginModal">
@@ -727,60 +789,28 @@
   </footer>
 
   <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
   <script>
     const CLOUDINARY_CLOUD_NAME = 'donrnz9gy';
     const CLOUDINARY_UPLOAD_PRESET = 'cheseely_preset';
     let uploadedImageUrl = '';
-    let pendingWaMessage = '';
+    const defaultProducts = [
+      { name: 'Cheese Cake', price: 95000, image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop' },
+      { name: 'Red Velvet', price: 120000, image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=400&fit=crop' },
+      { name: 'Chocolate', price: 110000, image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=400&fit=crop' },
+      { name: 'Strawberry', price: 105000, image: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=400&h=400&fit=crop' },
+      { name: 'Tiramisu', price: 135000, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=400&fit=crop' },
+      { name: 'Matcha Cake', price: 115000, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop' }
+    ];
 
-    function getProducts() {
-      try {
-        const data = localStorage.getItem('cheseely_products');
-        if (data) {
-          const parsed = JSON.parse(data);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-      } catch (e) {}
-      return [
-        { name: 'Cheese Cake', price: 95000, image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop' },
-        { name: 'Red Velvet', price: 120000, image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=400&fit=crop' },
-        { name: 'Chocolate', price: 110000, image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=400&fit=crop' },
-        { name: 'Strawberry', price: 105000, image: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=400&h=400&fit=crop' },
-        { name: 'Tiramisu', price: 135000, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=400&fit=crop' },
-        { name: 'Matcha Cake', price: 115000, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop' }
-      ];
-    }
-
-    function saveProducts(arr) { localStorage.setItem('cheseely_products', JSON.stringify(arr)); }
-    function getWaNumber() { return localStorage.getItem('cheseely_wa') || '6281234567890'; }
-    function saveWaNumberToLocal(n) { localStorage.setItem('cheseely_wa', n); }
-
-    let products = getProducts();
-    let waNumber = getWaNumber();
+    let products = [];
+    let waNumber = '6281234567890';
     let cart = [];
     let total = 0;
     let isAdminLoggedIn = false;
 
-    function generateQRIS(amount) {
-      const baseQRIS = "00020101021126610014COM.GO-JEK.WWW01189360091431059853890210G1059853890303UMI51440014ID.CO.QRIS.WWW0215ID10265149406040303UMI520458125303360";
-      const sisaQRIS = "5802ID5911Cheesely_id6006PADANG61052516362070703A016304";
-      const amtStr = amount.toString();
-      const tag54 = "54" + amtStr.length.toString().padStart(2, '0') + amtStr;
-      const fullPayloadNoCrc = baseQRIS + tag54 + sisaQRIS;
-
-      let crc = 0xFFFF;
-      for (let i = 0; i < fullPayloadNoCrc.length; i++) {
-        let code = fullPayloadNoCrc.charCodeAt(i);
-        crc ^= (code << 8);
-        for (let j = 0; j < 8; j++) {
-          if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
-          else crc <<= 1;
-          crc &= 0xFFFF;
-        }
-      }
-      let crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
-      return fullPayloadNoCrc + crcHex;
-    }
+    function getProducts() { return products; }
+    function getWaNumber() { return waNumber; }
 
     function handleImageSelect(event) {
       const file = event.target.files[0];
@@ -797,7 +827,7 @@
       uploadToCloudinary(file);
     }
 
-    async function uploadToCloudinary(file) {
+    function uploadToCloudinary(file) {
       const statusEl = document.getElementById('uploadStatus');
       const btnAdd = document.getElementById('btnAddProduct');
 
@@ -811,36 +841,28 @@
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
       formData.append('folder', 'cheseely-products');
 
-      try {
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-          method: 'POST',
-          body: formData
-        });
-
-        const text = await res.text();
-        let data = {};
-        try { data = JSON.parse(text); } catch (e) {}
-
-        if (!res.ok) {
-          const msg = data?.error?.message || `HTTP ${res.status}`;
-          throw new Error(msg);
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.secure_url) {
+          uploadedImageUrl = data.secure_url;
+          document.getElementById('newImage').value = uploadedImageUrl;
+          statusEl.textContent = `✅ Uploaded! (${(data.bytes / 1024).toFixed(1)} KB)`;
+          statusEl.style.color = '#25D366';
+          btnAdd.disabled = false;
+        } else {
+          throw new Error(data.error?.message || 'Upload failed');
         }
-
-        if (!data.secure_url) throw new Error('secure_url tidak ditemukan');
-
-        uploadedImageUrl = data.secure_url;
-        document.getElementById('newImage').value = uploadedImageUrl;
-        statusEl.textContent = `✅ Uploaded! (${((data.bytes || 0) / 1024).toFixed(1)} KB)`;
-        statusEl.style.color = '#25D366';
-        btnAdd.disabled = false;
-      } catch (err) {
-        console.error('Cloudinary upload error:', err);
-        const message = err?.message || 'Failed to fetch';
-        statusEl.textContent = `❌ Upload gagal: ${message}`;
+      })
+      .catch(() => {
+        statusEl.textContent = '❌ Upload gagal, coba lagi';
         statusEl.style.color = '#c0392b';
         btnAdd.disabled = false;
         uploadedImageUrl = '';
-      }
+      });
     }
 
     function renderProducts() {
@@ -862,7 +884,12 @@
     function toggleCart() { document.getElementById('cart').classList.toggle('active'); document.getElementById('cartOverlay').classList.toggle('active'); }
     function closeCart() { document.getElementById('cart').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
 
-    function addToCart(name, price) { cart.push({ name, price }); total += price; updateCart(); }
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      total += price;
+      updateCart();
+    }
+
     function removeFromCart(i) { total -= cart[i].price; cart.splice(i, 1); updateCart(); }
 
     function updateCart() {
@@ -896,11 +923,6 @@
       document.getElementById('formOverlay').classList.remove('active');
     }
 
-    function closeQrisModal() {
-      document.getElementById('qrisModal').classList.remove('active');
-      document.getElementById('qrisOverlay').classList.remove('active');
-    }
-
     function submitOrder() {
       const name = document.getElementById('customerName').value.trim();
       const phone = document.getElementById('customerPhone').value.trim();
@@ -921,30 +943,11 @@
       message += `📋 *Detail Pesanan:*%0A`;
       cart.forEach((item, i) => { message += `${i + 1}. ${item.name} - Rp ${item.price.toLocaleString('id-ID')}%0A`; });
       message += `%0A💰 *Total: Rp ${total.toLocaleString('id-ID')}*%0A`;
-      message += '💳 *Status:* Dibayar Via QRIS Otomatis%0A';
-      message += '━━━━━━━━━━━━━━━%0A';
+      message += '%0A━━━━━━━━━━━━━━━%0A';
       message += 'Terima kasih! 🙏';
 
-      pendingWaMessage = message;
-      const qrisString = generateQRIS(total);
-
-      document.getElementById('qrisTotal').innerText = total.toLocaleString('id-ID');
-      document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrisString)}`;
-
+      window.open(`https://wa.me/${getWaNumber()}?text=${message}`, '_blank');
       closeOrderForm();
-      closeCart();
-      document.getElementById('qrisModal').classList.add('active');
-      document.getElementById('qrisOverlay').classList.add('active');
-    }
-
-    function redirectToWhatsApp() {
-      if (pendingWaMessage) {
-        window.open(`https://wa.me/${getWaNumber()}?text=${pendingWaMessage}`, '_blank');
-        closeQrisModal();
-        cart = [];
-        total = 0;
-        updateCart();
-      }
     }
 
     function searchProduct() {
@@ -981,45 +984,59 @@
       }
     }
 
-    function saveWaNumber() {
+    async function saveWaNumber() {
       const n = document.getElementById('waNumber')?.value.trim();
-      if (n) { waNumber = n; saveWaNumberToLocal(n); alert('Nomor tersimpan!'); }
+      if (!n) return;
+      try {
+        await window.dbSet(window.dbRef(window.rtdb, 'cheseely/waNumber'), n);
+        waNumber = n;
+        alert('Nomor tersimpan ke database!');
+      } catch (e) {
+        alert('Gagal simpan nomor WA ke database.');
+      }
     }
 
-    function addProduct() {
+    async function addProduct() {
       const n = document.getElementById('newName')?.value.trim();
       const p = parseInt(document.getElementById('newPrice')?.value);
       const i = uploadedImageUrl || document.getElementById('newImage')?.value.trim();
 
       if (!n || !p || !i) { alert('Semua field wajib diisi (termasuk upload gambar)!'); return; }
-      const prods = getProducts();
-      prods.push({ name: n, price: p, image: i });
-      saveProducts(prods);
-      products = prods;
-      renderProducts();
-      renderAdminProductList();
+      const prods = [...getProducts(), { name: n, price: p, image: i }];
+      try {
+        await window.dbSet(window.dbRef(window.rtdb, 'cheseely/products'), prods);
+        products = prods;
+        renderProducts();
+        renderAdminProductList();
 
-      document.getElementById('newName').value = '';
-      document.getElementById('newPrice').value = '';
-      document.getElementById('newImage').value = '';
-      uploadedImageUrl = '';
-      document.getElementById('uploadPreview').classList.remove('show');
-      document.getElementById('uploadText').style.display = '';
-      document.getElementById('uploadArea').classList.remove('has-image');
-      document.getElementById('uploadStatus').textContent = '';
-      document.getElementById('imageInput').value = '';
-      alert('Produk ditambahkan!');
+        document.getElementById('newName').value = '';
+        document.getElementById('newPrice').value = '';
+        document.getElementById('newImage').value = '';
+        uploadedImageUrl = '';
+        document.getElementById('uploadPreview').classList.remove('show');
+        document.getElementById('uploadText').style.display = '';
+        document.getElementById('uploadArea').classList.remove('has-image');
+        document.getElementById('uploadStatus').textContent = '';
+        document.getElementById('imageInput').value = '';
+        alert('Produk ditambahkan ke database!');
+      } catch (e) {
+        alert('Gagal tambah produk ke database.');
+      }
     }
 
-    function deleteProduct(i) {
+    async function deleteProduct(i) {
       if (!confirm('Hapus produk ini?')) return;
-      const prods = getProducts();
+      const prods = [...getProducts()];
       prods.splice(i, 1);
-      saveProducts(prods);
-      products = prods;
-      renderProducts();
-      renderAdminProductList();
-      renderPreview();
+      try {
+        await window.dbSet(window.dbRef(window.rtdb, 'cheseely/products'), prods);
+        products = prods;
+        renderProducts();
+        renderAdminProductList();
+        renderPreview();
+      } catch (e) {
+        alert('Gagal hapus produk dari database.');
+      }
     }
 
     function renderAdminProductList() {
@@ -1042,26 +1059,54 @@
       timer = setTimeout(() => clicks = 0, 2000);
     });
 
-    renderProducts();
-    updateCart();
+    window.loadInitialData = async function() {
+      try {
+        const productsSnap = await window.dbGet(window.dbRef(window.rtdb, 'cheseely/products'));
+        const waSnap = await window.dbGet(window.dbRef(window.rtdb, 'cheseely/waNumber'));
+
+        if (productsSnap.exists() && Array.isArray(productsSnap.val()) && productsSnap.val().length > 0) {
+          products = productsSnap.val();
+        } else {
+          products = defaultProducts;
+          await window.dbSet(window.dbRef(window.rtdb, 'cheseely/products'), defaultProducts);
+        }
+
+        if (waSnap.exists() && waSnap.val()) {
+          waNumber = waSnap.val();
+        } else {
+          waNumber = '6281234567890';
+          await window.dbSet(window.dbRef(window.rtdb, 'cheseely/waNumber'), waNumber);
+        }
+      } catch (e) {
+        products = defaultProducts;
+        waNumber = '6281234567890';
+        alert('Gagal konek ke Realtime Database. Cek rules Firebase.');
+      }
+
+      renderProducts();
+      updateCart();
+    };
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB8zBpyRqgMOt2ULREcpYfsw8W_gUJhkXs",
       authDomain: "arsip-digital-5120c.firebaseapp.com",
-      databaseURL: "https://arsip-digital-5120c-default-rtdb.firebaseio.com",
       projectId: "arsip-digital-5120c",
       storageBucket: "arsip-digital-5120c.firebasestorage.app",
       messagingSenderId: "826061942517",
       appId: "1:826061942517:web:9615ff8b68bb097b0a5fbc",
-      measurementId: "G-Q3CQ3E7C15"
+      measurementId: "G-Q3CQ3E7C15",
+      databaseURL: "https://arsip-digital-5120c-default-rtdb.firebaseio.com"
     };
 
     const app = initializeApp(firebaseConfig);
+    const rtdb = getDatabase(app);
+
     try {
       getAnalytics(app);
     } catch (e) {
@@ -1069,6 +1114,12 @@
     }
 
     window.firebaseApp = app;
+    window.rtdb = rtdb;
+    window.dbRef = ref;
+    window.dbGet = get;
+    window.dbSet = set;
+
+    window.loadInitialData();
   </script>
 </body>
 </html>
