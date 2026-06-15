@@ -25,7 +25,8 @@
 
     .cart-overlay,
     .form-overlay,
-    .admin-overlay {
+    .admin-overlay,
+    .review-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -42,7 +43,8 @@
 
     .cart-overlay.active,
     .form-overlay.active,
-    .admin-overlay.active {
+    .admin-overlay.active,
+    .review-overlay.active {
       opacity: 1;
       visibility: visible;
     }
@@ -335,10 +337,35 @@
       cursor: pointer;
       transition: 0.2s;
       letter-spacing: 0.3px;
+      margin-bottom: 8px;
     }
 
     .btn-order:active {
       background: #9f7260;
+      transform: scale(0.97);
+    }
+
+    .btn-qris {
+      width: 100%;
+      padding: 14px;
+      background: #1e3a5f;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+      letter-spacing: 0.3px;
+      background: #0d2b45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-qris:active {
+      background: #091f33;
       transform: scale(0.97);
     }
 
@@ -577,11 +604,6 @@
       cursor: pointer;
     }
 
-    .admin-form button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     .product-list-item {
       display: flex;
       justify-content: space-between;
@@ -645,6 +667,85 @@
       margin-top: 4px;
     }
 
+    .review-section {
+      max-width: 800px;
+      margin: 24px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+    }
+
+    .review-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f0e4da;
+    }
+
+    .review-form input, .review-form textarea {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #e7dbd2;
+      font-size: 14px;
+    }
+
+    .review-form button {
+      background: #b4846c;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .review-card {
+      background: #fdfbf9;
+      padding: 14px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+      border: 1px solid #f3eae4;
+    }
+
+    .review-card strong {
+      color: #4a3b42;
+    }
+
+    .qris-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: white;
+      padding: 24px;
+      border-radius: 24px;
+      z-index: 1001;
+      width: 92%;
+      max-width: 360px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .qris-modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #qrisCanvas {
+      width: 200px;
+      height: 200px;
+      margin: 10px auto;
+      background: white;
+      border-radius: 12px;
+    }
+
     footer {
       text-align: center;
       padding: 24px 16px 28px;
@@ -668,10 +769,6 @@
         top: calc(16px + env(safe-area-inset-top));
         right: calc(16px + env(safe-area-inset-right));
       }
-      .cart,
-      .admin-panel {
-        padding-top: calc(20px + env(safe-area-inset-top));
-      }
     }
   </style>
 </head>
@@ -680,6 +777,7 @@
   <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
   <div class="form-overlay" id="formOverlay" onclick="closeOrderForm()"></div>
   <div class="admin-overlay" id="adminOverlay" onclick="closeAllAdmin()"></div>
+  <div class="review-overlay" id="reviewOverlay" onclick="closeQrisModal()"></div>
 
   <div class="floating-cart" onclick="toggleCart()">
     🛒 <span class="cart-badge" id="cart-count">0</span>
@@ -695,6 +793,16 @@
 
   <section class="products" id="product-list"></section>
 
+  <div class="review-section" id="reviewSection">
+    <h3 style="margin-bottom:12px; color:#3a2f35;">💬 Ulasan Pelanggan</h3>
+    <div class="review-form">
+      <input type="text" id="reviewName" placeholder="Nama Kamu">
+      <textarea id="reviewText" placeholder="Tulis ulasanmu..."></textarea>
+      <button onclick="submitReview()">Kirim Ulasan</button>
+    </div>
+    <div id="reviewList"></div>
+  </div>
+
   <div class="cart" id="cart">
     <div class="cart-header">
       <span>🛒 Keranjang</span>
@@ -707,6 +815,7 @@
         <span>Rp <span id="total">0</span></span>
       </div>
       <button class="btn-order" onclick="openOrderForm()">💬 Pesan via WhatsApp</button>
+      <button class="btn-qris" onclick="openQrisModal()">📲 Bayar QRIS (Dinamis)</button>
     </div>
   </div>
 
@@ -730,6 +839,15 @@
       <textarea id="customerNote" placeholder="Misal: lilin angka 21, kartu ucapan..."></textarea>
     </div>
     <button class="btn-submit-order" onclick="submitOrder()">🚀 Kirim ke WhatsApp</button>
+  </div>
+
+  <div class="qris-modal" id="qrisModal">
+    <span class="close-form" onclick="closeQrisModal()">✕</span>
+    <h3>💳 QRIS Dinamis</h3>
+    <p style="font-size:14px; margin-bottom:8px;">Total: <strong>Rp <span id="qrisTotal">0</span></strong></p>
+    <canvas id="qrisCanvas" width="200" height="200"></canvas>
+    <p style="font-size:12px; color:#666;">Scan pakai aplikasi e-wallet / mobile banking</p>
+    <button class="btn-submit-order" style="background:#0d2b45; margin-top:12px;" onclick="closeQrisModal()">Selesai</button>
   </div>
 
   <div class="admin-login-modal" id="adminLoginModal">
@@ -789,6 +907,7 @@
   </footer>
 
   <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 
   <script>
     const CLOUDINARY_CLOUD_NAME = 'donrnz9gy';
@@ -808,14 +927,48 @@
     let cart = [];
     let total = 0;
     let isAdminLoggedIn = false;
+    let reviews = [];
 
     function getProducts() { return products; }
     function getWaNumber() { return waNumber; }
 
+    // ========== QRIS DINAMIS PAKE KODE LO ==========
+    function generateQrisNominal(nominal) {
+      const baseQris = "00020101021126610014COM.GO-JEK.WWW01189360091431059853890210G1059853890303UMI51440014ID.CO.QRIS.WWW0215ID10265149406040303UMI520458125303360";
+      const sisaQris = "5802ID5911Cheesely_id6006PADANG61052516362070703A016304";
+      const strNominal = String(nominal);
+      const tag54 = `54${String(strNominal.length).padStart(2, '0')}${strNominal}`;
+      const fullStr = baseQris + tag54 + sisaQris;
+
+      let crc = 0xFFFF;
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(fullStr);
+      for (let i = 0; i < bytes.length; i++) {
+        crc ^= (bytes[i] << 8);
+        for (let j = 0; j < 8; j++) {
+          if (crc & 0x8000) {
+            crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+          } else {
+            crc = (crc << 1) & 0xFFFF;
+          }
+        }
+      }
+      return fullStr + crc.toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    function renderQRIS(nominal) {
+      const canvas = document.getElementById('qrisCanvas');
+      if (!canvas) return;
+      const qrString = generateQrisNominal(nominal);
+      QRCode.toCanvas(canvas, qrString, { width: 200, margin: 1 }, (error) => {
+        if (error) console.warn('QR gagal: ', error);
+      });
+    }
+    // ========== END QRIS ==========
+
     function handleImageSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         document.getElementById('uploadPreview').src = e.target.result;
@@ -830,46 +983,36 @@
     function uploadToCloudinary(file) {
       const statusEl = document.getElementById('uploadStatus');
       const btnAdd = document.getElementById('btnAddProduct');
-
       statusEl.textContent = '⏳ Uploading...';
       statusEl.style.color = '#b4846c';
       btnAdd.disabled = true;
       uploadedImageUrl = '';
-
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
       formData.append('folder', 'cheseely-products');
-
-      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-        method: 'POST',
-        body: formData
-      })
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData })
       .then(res => res.json())
       .then(data => {
         if (data.secure_url) {
           uploadedImageUrl = data.secure_url;
           document.getElementById('newImage').value = uploadedImageUrl;
-          statusEl.textContent = `✅ Uploaded! (${(data.bytes / 1024).toFixed(1)} KB)`;
+          statusEl.textContent = `✅ Uploaded!`;
           statusEl.style.color = '#25D366';
           btnAdd.disabled = false;
-        } else {
-          throw new Error(data.error?.message || 'Upload failed');
-        }
+        } else throw new Error('Upload failed');
       })
       .catch(() => {
-        statusEl.textContent = '❌ Upload gagal, coba lagi';
+        statusEl.textContent = '❌ Upload gagal';
         statusEl.style.color = '#c0392b';
         btnAdd.disabled = false;
-        uploadedImageUrl = '';
       });
     }
 
     function renderProducts() {
       const container = document.getElementById('product-list');
       if (!container) return;
-      const prods = getProducts();
-      container.innerHTML = prods.map(p => `
+      container.innerHTML = getProducts().map(p => `
         <div class="card">
           <img src="${p.image}" alt="${p.name}" loading="lazy">
           <div class="card-content">
@@ -884,12 +1027,7 @@
     function toggleCart() { document.getElementById('cart').classList.toggle('active'); document.getElementById('cartOverlay').classList.toggle('active'); }
     function closeCart() { document.getElementById('cart').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
 
-    function addToCart(name, price) {
-      cart.push({ name, price });
-      total += price;
-      updateCart();
-    }
-
+    function addToCart(name, price) { cart.push({ name, price }); total += price; updateCart(); }
     function removeFromCart(i) { total -= cart[i].price; cart.splice(i, 1); updateCart(); }
 
     function updateCart() {
@@ -913,7 +1051,7 @@
     }
 
     function openOrderForm() {
-      if (cart.length === 0) { alert('Keranjang masih kosong!'); return; }
+      if (cart.length === 0) { alert('Keranjang kosong!'); return; }
       document.getElementById('orderFormModal').classList.add('active');
       document.getElementById('formOverlay').classList.add('active');
     }
@@ -928,24 +1066,13 @@
       const phone = document.getElementById('customerPhone').value.trim();
       const address = document.getElementById('customerAddress').value.trim();
       const note = document.getElementById('customerNote').value.trim();
-
-      if (!name || !phone || !address) {
-        alert('Mohon isi Nama, Nomor Telepon, dan Alamat!');
-        return;
-      }
-
+      if (!name || !phone || !address) { alert('Mohon isi Nama, Telepon, dan Alamat!'); return; }
       let message = '🍰 *PESANAN BARU - Cheseely.id*%0A%0A';
-      message += `👤 *Nama:* ${name}%0A`;
-      message += `📞 *Telp:* ${phone}%0A`;
-      message += `📍 *Alamat:* ${address}%0A`;
+      message += `👤 *Nama:* ${name}%0A📞 *Telp:* ${phone}%0A📍 *Alamat:* ${address}%0A`;
       if (note) message += `📝 *Catatan:* ${note}%0A`;
-      message += '%0A━━━━━━━━━━━━━━━%0A';
-      message += `📋 *Detail Pesanan:*%0A`;
-      cart.forEach((item, i) => { message += `${i + 1}. ${item.name} - Rp ${item.price.toLocaleString('id-ID')}%0A`; });
-      message += `%0A💰 *Total: Rp ${total.toLocaleString('id-ID')}*%0A`;
-      message += '%0A━━━━━━━━━━━━━━━%0A';
-      message += 'Terima kasih! 🙏';
-
+      message += '%0A━━━━━━━━━━━━━━━%0A📋 *Detail Pesanan:*%0A';
+      cart.forEach((item, i) => { message += `${i+1}. ${item.name} - Rp ${item.price.toLocaleString('id-ID')}%0A`; });
+      message += `%0A💰 *Total: Rp ${total.toLocaleString('id-ID')}*%0A%0A━━━━━━━━━━━━━━━%0ATerima kasih! 🙏`;
       window.open(`https://wa.me/${getWaNumber()}?text=${message}`, '_blank');
       closeOrderForm();
     }
@@ -965,9 +1092,7 @@
 
     function adminLogin() {
       if (document.getElementById('adminUser')?.value === 'admin' && document.getElementById('adminPass')?.value === 'admin123') {
-        isAdminLoggedIn = true;
-        closeAdminLogin();
-        openAdminPanel();
+        isAdminLoggedIn = true; closeAdminLogin(); openAdminPanel();
       } else alert('Username atau password salah!');
     }
 
@@ -989,54 +1114,37 @@
       if (!n) return;
       try {
         await window.dbSet(window.dbRef(window.rtdb, 'cheseely/waNumber'), n);
-        waNumber = n;
-        alert('Nomor tersimpan ke database!');
-      } catch (e) {
-        alert('Gagal simpan nomor WA ke database.');
-      }
+        waNumber = n; alert('Nomor tersimpan!');
+      } catch (e) { alert('Gagal simpan.'); }
     }
 
     async function addProduct() {
       const n = document.getElementById('newName')?.value.trim();
       const p = parseInt(document.getElementById('newPrice')?.value);
       const i = uploadedImageUrl || document.getElementById('newImage')?.value.trim();
-
-      if (!n || !p || !i) { alert('Semua field wajib diisi (termasuk upload gambar)!'); return; }
+      if (!n || !p || !i) { alert('Semua field wajib diisi!'); return; }
       const prods = [...getProducts(), { name: n, price: p, image: i }];
       try {
         await window.dbSet(window.dbRef(window.rtdb, 'cheseely/products'), prods);
-        products = prods;
-        renderProducts();
-        renderAdminProductList();
-
-        document.getElementById('newName').value = '';
-        document.getElementById('newPrice').value = '';
-        document.getElementById('newImage').value = '';
-        uploadedImageUrl = '';
+        products = prods; renderProducts(); renderAdminProductList();
+        document.getElementById('newName').value = ''; document.getElementById('newPrice').value = '';
+        document.getElementById('newImage').value = ''; uploadedImageUrl = '';
         document.getElementById('uploadPreview').classList.remove('show');
         document.getElementById('uploadText').style.display = '';
         document.getElementById('uploadArea').classList.remove('has-image');
         document.getElementById('uploadStatus').textContent = '';
         document.getElementById('imageInput').value = '';
-        alert('Produk ditambahkan ke database!');
-      } catch (e) {
-        alert('Gagal tambah produk ke database.');
-      }
+        alert('Produk ditambahkan!');
+      } catch (e) { alert('Gagal tambah produk.'); }
     }
 
     async function deleteProduct(i) {
-      if (!confirm('Hapus produk ini?')) return;
-      const prods = [...getProducts()];
-      prods.splice(i, 1);
+      if (!confirm('Hapus?')) return;
+      const prods = [...getProducts()]; prods.splice(i, 1);
       try {
         await window.dbSet(window.dbRef(window.rtdb, 'cheseely/products'), prods);
-        products = prods;
-        renderProducts();
-        renderAdminProductList();
-        renderPreview();
-      } catch (e) {
-        alert('Gagal hapus produk dari database.');
-      }
+        products = prods; renderProducts(); renderAdminProductList(); renderPreview();
+      } catch (e) { alert('Gagal hapus.'); }
     }
 
     function renderAdminProductList() {
@@ -1048,13 +1156,43 @@
     function renderPreview() {
       const c = document.getElementById('previewProducts');
       if (!c) return;
-      c.innerHTML = getProducts().map(p => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5ede7;"><img src="${p.image}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;"><div><strong style="font-size:14px;">${p.name}</strong><br><span style="color:#b4846c;font-size:13px;">Rp${p.price.toLocaleString('id-ID')}</span></div></div>`).join('');
+      c.innerHTML = getProducts().map(p => `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5ede7;"><img src="${p.image}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;"><div><strong>${p.name}</strong><br><span style="color:#b4846c;">Rp${p.price.toLocaleString('id-ID')}</span></div></div>`).join('');
+    }
+
+    function submitReview() {
+      const name = document.getElementById('reviewName').value.trim() || 'Anonim';
+      const text = document.getElementById('reviewText').value.trim();
+      if (!text) return alert('Tulis ulasan dulu ya!');
+      reviews.push({ name, text, date: new Date().toLocaleDateString('id-ID') });
+      document.getElementById('reviewName').value = '';
+      document.getElementById('reviewText').value = '';
+      renderReviews();
+      try { window.dbSet(window.dbRef(window.rtdb, 'cheseely/reviews'), reviews); } catch(e) {}
+    }
+
+    function renderReviews() {
+      const c = document.getElementById('reviewList');
+      if (!c) return;
+      if (!reviews.length) { c.innerHTML = '<p style="color:#8f7e7a;">Belum ada ulasan.</p>'; return; }
+      c.innerHTML = reviews.slice().reverse().map(r => `<div class="review-card"><strong>${r.name}</strong> <span style="font-size:12px;color:#8f7e7a;">${r.date}</span><p style="margin-top:4px;">${r.text}</p></div>`).join('');
+    }
+
+    function openQrisModal() {
+      if (cart.length === 0) { alert('Keranjang kosong!'); return; }
+      document.getElementById('qrisTotal').innerText = total.toLocaleString('id-ID');
+      document.getElementById('qrisModal').classList.add('active');
+      document.getElementById('reviewOverlay').classList.add('active');
+      renderQRIS(total);
+    }
+
+    function closeQrisModal() {
+      document.getElementById('qrisModal').classList.remove('active');
+      document.getElementById('reviewOverlay').classList.remove('active');
     }
 
     let clicks = 0, timer = null;
     document.getElementById('secretAdminTrigger')?.addEventListener('click', () => {
-      clicks++;
-      clearTimeout(timer);
+      clicks++; clearTimeout(timer);
       if (clicks >= 5) { clicks = 0; isAdminLoggedIn ? openAdminPanel() : openAdminLogin(); }
       timer = setTimeout(() => clicks = 0, 2000);
     });
@@ -1063,6 +1201,7 @@
       try {
         const productsSnap = await window.dbGet(window.dbRef(window.rtdb, 'cheseely/products'));
         const waSnap = await window.dbGet(window.dbRef(window.rtdb, 'cheseely/waNumber'));
+        const reviewsSnap = await window.dbGet(window.dbRef(window.rtdb, 'cheseely/reviews'));
 
         if (productsSnap.exists() && Array.isArray(productsSnap.val()) && productsSnap.val().length > 0) {
           products = productsSnap.val();
@@ -1077,13 +1216,21 @@
           waNumber = '6281234567890';
           await window.dbSet(window.dbRef(window.rtdb, 'cheseely/waNumber'), waNumber);
         }
+
+        if (reviewsSnap.exists() && Array.isArray(reviewsSnap.val())) {
+          reviews = reviewsSnap.val();
+        } else {
+          reviews = [];
+        }
       } catch (e) {
         products = defaultProducts;
         waNumber = '6281234567890';
-        alert('Gagal konek ke Realtime Database. Cek rules Firebase.');
+        reviews = [];
+        alert('Gagal konek ke database. Cek rules Firebase.');
       }
 
       renderProducts();
+      renderReviews();
       updateCart();
     };
   </script>
@@ -1106,19 +1253,12 @@
 
     const app = initializeApp(firebaseConfig);
     const rtdb = getDatabase(app);
-
-    try {
-      getAnalytics(app);
-    } catch (e) {
-      console.log("Analytics tidak aktif di environment ini.");
-    }
-
+    try { getAnalytics(app); } catch (e) { console.log("Analytics tidak aktif."); }
     window.firebaseApp = app;
     window.rtdb = rtdb;
     window.dbRef = ref;
     window.dbGet = get;
     window.dbSet = set;
-
     window.loadInitialData();
   </script>
 </body>
